@@ -17,8 +17,8 @@ bool isPrime(int number){
 
 int main(){
     int numb;
-    char keepGoing='y';
-    while(keepGoing=='y' or keepGoing=='Y'){
+    std::string keepGoing="y";
+    while(keepGoing=="y" or keepGoing=="Y"){
         std::cout << "INPUT AN INTEGER : ";
         std::cin >> numb;
         if (isPrime(numb)==true){
@@ -29,6 +29,16 @@ int main(){
         }
         std::cout << "Continue? Y/N. ";
         std::cin >> keepGoing;
+        bool inputCheck=false;
+        while (inputCheck==false){
+            if(keepGoing!="y" and keepGoing!="Y" and keepGoing!="n" and keepGoing!="N"){
+                std::cout << "That's not N or Y, let's try that again: ";
+                std::cin >> keepGoing;
+            }
+            else{
+                inputCheck=true;
+            }
+        }
     }
     return 0;
 }

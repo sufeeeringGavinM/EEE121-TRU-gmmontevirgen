@@ -17,8 +17,8 @@ bool isPalindrome(string inputString){
 
 int main(){
     string word;
-    char keepGoing='y';
-    while(keepGoing=='Y' or keepGoing=='y'){
+    string keepGoing="y";
+    while((keepGoing=="Y" or keepGoing=="y") and (keepGoing!="n" or keepGoing!="N")){
         cout << "INPUT A STRING : ";
         cin >> word;
         if (isPalindrome(word)==true){
@@ -27,8 +27,18 @@ int main(){
         else{
             cout << word << " IS NOT A PALINDROME" << endl;
         }
-        std::cout << "Continue? Y/N. ";
-        std::cin >> keepGoing;
+        cout << "Continue? Y/N. ";
+        cin >> keepGoing;
+        bool inputCheck=false;
+        while (inputCheck==false){
+            if(keepGoing!="y" and keepGoing!="Y" and keepGoing!="n" and keepGoing!="N"){
+                cout << "That's not N or Y, let's try that again: ";
+                cin >> keepGoing;
+            }
+            else{
+                inputCheck=true;
+            }
+        }
     }
     return 0;
 }
