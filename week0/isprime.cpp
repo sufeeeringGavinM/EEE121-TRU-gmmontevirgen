@@ -27,18 +27,14 @@ int main(){
         else{
             std::cout << numb << " IS NOT A PRIME NUMBER" << std::endl;
         }
+        std::cin.clear();
+        std::cin.ignore(10000,'\n');
         std::cout << "Continue? Y/N. ";
         std::cin >> keepGoing;
-        bool inputCheck=false;
-        while (inputCheck==false){
-            if(keepGoing!="y" and keepGoing!="Y" and keepGoing!="n" and keepGoing!="N"){
-                std::cout << "That's not N or Y, let's try that again: ";
-                std::cin >> keepGoing;
+        while(keepGoing!="y" and keepGoing!="Y" and keepGoing!="n" and keepGoing!="N"){ //input check
+            std::cout << "That's not N or Y, let's try that again: ";
+            std::cin >> keepGoing;
             }
-            else{
-                inputCheck=true;
-            }
-        }
     }
     return 0;
 }
