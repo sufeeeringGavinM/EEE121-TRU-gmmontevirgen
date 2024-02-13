@@ -6,7 +6,7 @@ bool isPalindrome(string inputString){
     int length=copy.size();
     for(int x=1, y=0; x<=length; x++, y++){
         copy[y]=inputString[length-x];
-    }`
+    }
     if (copy==inputString){
         return true;
     }
