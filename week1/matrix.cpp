@@ -10,7 +10,7 @@ vector<string> parser(string splitMe){ // taken from https://www.scaler.com/topi
     int start=0, end=0;
     for(int x=0; x<=splitMe.size(); x++){
         if(splitMe[x]==splitter || x==splitMe.size()){
-            end=x; //realize first word is over
+            end=x; //realize word is over
             string temp;
             temp.append(splitMe, start, end-start); // append() adds a part of a string, in this if(checker==splitMe, to a x such that x.append(origstring, start,end)
             splitted.push_back(temp); //add to vector of strings
