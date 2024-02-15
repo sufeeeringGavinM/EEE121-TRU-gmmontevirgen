@@ -19,8 +19,17 @@ vector<string> parser(string splitMe){ // taken from https://www.scaler.com/topi
     }
     return splitted;
 }
+bool isNumber(string s){ //taken from a confused stackoverflow asker https://stackoverflow.com/questions/53436314/checking-if-a-string-is-a-valid-number-no-letters-at-all
+    for(int i=0; i<s.length(); i++){ //the guy says it doesnt work but it does!?
+        if(!isdigit(s[i])){
+            return false;
+            break;
+        }
+    }
+    return true;
+}
 int inputCheck(vector<string> command){
-    for (int i; i<command.size(); i++){cout << command[i] <<' ';} //oneliner to print command in one
+    for (int i=0; i<command.size(); i++){cout << command[i] <<' ';} //oneliner to reprint user command
     if(command[0]=="EXIT"){
         cout << endl;
     }
@@ -31,6 +40,26 @@ int inputCheck(vector<string> command){
         if(command.size()==1){
             return 1; //default for error
         }
+        try{
+            if(command.size()==2 && stoi(command[1]) <=1){
+                return 1;
+            }
+            if(command.size()==3 && (stoi(command[2]) <=1 || stoi(command[1]) <=1 )){
+                return 1;
+            }
+            if(command.size()>3){
+                return 1;
+            }
+            for(int i=1; i<command.size(); i++){ //handling nonnumber characters
+                if(!isNumber(command[i])){
+                    return 1;
+                }
+            }
+        }
+        catch(exception){
+            return 1;
+        }
+    
         return 2;
     }
     if(command[0]=="PRINT"){
@@ -43,10 +72,30 @@ int inputCheck(vector<string> command){
         if(command.size()!=3){
             return 1;
         }
+        try{
+            for(int i=1; i<command.size(); i++){
+                if(!isNumber(command[i])){
+                    return 1;
+                }
+            }
+        }
+        catch(exception){
+            return 1;
+        }
         return 4;
     }
     if (command[0]=="SET"){
         if(command.size()!=4){
+            return 1;
+        }
+        try{
+            for(int i=1; i<command.size(); i++){
+                if(!isNumber(command[i])){
+                    return 1;
+                }
+            }
+        }
+        catch(exception){
             return 1;
         }
         return 5;
@@ -59,6 +108,16 @@ int inputCheck(vector<string> command){
     }
     if (command[0]=="SWAP_ROWS"){
         if(command.size()!=3){
+            return 1;
+        }
+        try{
+            for(int i=1; i<command.size(); i++){ 
+                if(!isNumber(command[i])){
+                    return 1;
+                }
+            }
+        }
+        catch(exception){
             return 1;
         }
         return 7;
@@ -92,6 +151,7 @@ int main(){
         int checker=inputCheck(command);
         if(checker==1){
             cout << "UNSUPPORTED COMMAND" << endl << endl ;
+            continue;
         }
         if(checker==8){
             break;
@@ -100,8 +160,14 @@ int main(){
             if(command.size()==2){
                 command.push_back(command[1]);
             }
-            rows=stoi(command[1]);
-            columns=stoi(command[2]);
+            try{
+                rows=stoi(command[1]);
+                columns=stoi(command[2]);
+            }
+            catch (exception){
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                continue;
+            }
             mat.resize(rows, vector<int>(columns));
 
             for(i=0;i<rows;i++){
@@ -115,6 +181,7 @@ int main(){
         }
         else if(checker==3 && existenceCheck==false){
             std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+            continue;
         }
 
         else if(existenceCheck==true){
@@ -146,6 +213,7 @@ int main(){
                 }
                 else{
                     std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    continue;
                 }
             } 
 
@@ -162,6 +230,7 @@ int main(){
                 }
                 else{
                     std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    continue;
                 }
             }
             else if(checker==6){ //transpose
@@ -192,11 +261,13 @@ int main(){
                 }
                 else{
                     std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    continue;
                 }
             }
         }
         else{
             std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+            continue;
         } 
         }
     return 0;
