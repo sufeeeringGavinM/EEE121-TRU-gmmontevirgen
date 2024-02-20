@@ -142,7 +142,7 @@ int main(){
     rows=0;
     columns=0;
     int random, i, j;
-    vector<vector<int>> mat(rows, vector<int>(columns));
+    vector<vector<int> > mat(rows, vector<int>(columns));
 
     while(check){
         std::cout << "> ";
@@ -178,10 +178,6 @@ int main(){
             
             std::cout << rows << "x" << columns << " MATRIX"<< endl << endl;
             existenceCheck=true;
-        }
-        else if(checker==3 && existenceCheck==false){
-            std::cout << "UNSUPPORTED COMMAND" << endl << endl;
-            continue;
         }
 
         else if(existenceCheck==true){
@@ -234,7 +230,7 @@ int main(){
                 }
             }
             else if(checker==6){ //transpose
-                vector<vector<int>> mat2(columns, vector<int>(rows));
+                vector<vector<int> > mat2(columns, vector<int>(rows));
                 for(i=0; i<rows; i++){
                     for(j=0;j<columns;j++){
                         mat2[j][i]=mat[i][j];
