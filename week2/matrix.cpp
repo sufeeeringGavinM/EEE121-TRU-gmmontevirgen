@@ -28,18 +28,23 @@ bool isNumber(string s){ //taken from a confused stackoverflow asker https://sta
     }
     return true;
 }
+vector<string> inputter(){
+    string unparsed;
+    std:cout << "> ";
+    getline(cin,unparsed);
+    vector<string> parsed=parser(unparsed);
+    for (int i=0; i<parsed.size(); i++){cout << parsed[i] <<' ';} //oneliner to reprint user command
+    cout<<endl<<endl;
+    return parsed;
+}
 
-// everything above was copy pasted from previous activity
-
-
-class matrix{
-    private:
-        int rows, columns;
-        vector<vector<int> > mat;
+class matrix{ 
     public:
+        string name;
+        int rows, columns;
+        vector<vector<int> > mat; 
         vector<string> command;
         matrix(vector<string> command);
-
         int inputCheck();
         void init();
         void print();
@@ -78,13 +83,14 @@ int matrix::inputCheck(){
             catch(exception){
                 return 1;
             }
-            return 2;
-        
+            (*this).init();
+            return 0;
         }
         if (command[0]=="EXIT"){
             if(command.size()!=1){
                 return 1;
             }
+            //alkwejfiowejiowjfaeiowejwfaeiojifjiwjfe// 
             exit(0);
         }
         else{
@@ -115,13 +121,15 @@ int matrix::inputCheck(){
             catch(exception){
                 return 1;
             }
-            return 2;
+            (*this).init();
+            return 0;
         }
         if(command[0]=="PRINT"){
             if(command.size()>1){
                 return 1;
             }
-            return 3;
+            (*this).print();
+            return 0;
         }
         if(command[0]=="GET"){
             if(command.size()!=3){
@@ -137,7 +145,8 @@ int matrix::inputCheck(){
             catch(exception){
                 return 1;
             }
-            return 4;
+            (*this).get();
+            return 0;
         }
         if (command[0]=="SET"){
             if(command.size()!=4){
@@ -153,13 +162,15 @@ int matrix::inputCheck(){
             catch(exception){
                 return 1;
             }
-            return 5;
+            (*this).set();
+            return 0;
         }
         if (command[0]=="TRANSPOSE"){
             if(command.size()!=1){
                 return 1;
             }
-            return 6;
+            (*this).transpose();
+            return 0;
         }
         if (command[0]=="SWAP_ROWS"){
             if(command.size()!=3){
@@ -175,13 +186,15 @@ int matrix::inputCheck(){
             catch(exception){
                 return 1;
             }
-            return 7;
+            (*this).swap_rows();
+            return 0;
         }
         if (command[0]=="EXIT"){
             if(command.size()!=1){
                 return 1;
             }
             exit(0);
+            ///w99w9w 999 iii oooo ooo!!//
         }
         else{
             return 1;
@@ -319,57 +332,64 @@ matrixNxN::matrixNxN(vector<string> command) : matrix(command){
 }
 
 int main(){
-    string unparsed;
-    string empty;
-    matrix Matrix=parser(empty);
+    vector<string> placeholder={};
+    matrix Matrix(placeholder);
+    vector<string> input;
     while(true){
-        std::cout << "> ";
-        getline(cin,unparsed);
-        vector<string> parsed=parser(unparsed);
-        for (int i=0; i<parsed.size(); i++){cout << parsed[i] <<' ';} //oneliner to reprint user command
-        cout<<endl<<endl;
-        Matrix.command=parser(unparsed);
+        input=inputter();
+        Matrix(&input);
+        
+        Matrix.inputCheck();
         if(Matrix.inputCheck()==1){
             std::cout << "UNSUPPORTED COMMAND" << endl << endl;
         }
-        else{
-            switch(Matrix.inputCheck()){
-                case 1:
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
-                    break;
-                case 2:{
-                    switch(Matrix.command.size()){
-                        case 2:
-                            {matrixNxN RealMatrix(Matrix.command); //rows and cols
-                            Matrix=RealMatrix;
-                            cout<< typeid(RealMatrix).name()<<endl;
-                            break;}
-                        case 3:
-                            {matrixMxN RealMatrix(Matrix.command);
-                            Matrix=RealMatrix;
-                            break;}
-                    }
-                    Matrix.init();
-                    break;}
-                case 3:
-                    {Matrix.print();
-                    break;}
-                case 4:
-                   { Matrix.get();
-                    break;}
-                case 5:
-                    {Matrix.set();
-                    break;}
-                case 6:
-                    {Matrix.transpose();
-                    break;}
-                case 7:
-                    {Matrix.swap_rows();
-                    break;}
-            }
+        if(!Matrix.mat.empty()){
+            break;
         }
-        cout<< typeid(Matrix).name()<<endl;
-        
     }
+    while(true){
+        input=inputter();
+        Matrix(&input);
+        Matrix.inputCheck();
+    }
+        // if(Matrix.inputCheck()==1){
+        //     std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+        // }
+        // else{
+        //     switch(Matrix.inputCheck()){
+        //         case 1:
+        //             std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+        //             break;
+        //         case 2:{
+        //             switch(Matrix.command.size()){
+        //                 case 2:
+        //                     {matrixNxN RealMatrix(Matrix.command); //rows and cols
+        //                     Matrix=RealMatrix;
+        //                     break;}
+        //                 case 3:
+        //                     {matrixMxN RealMatrix(Matrix.command);
+        //                     Matrix=RealMatrix;
+        //                     break;}
+        //             }
+        //             Matrix.init();
+        //             break;}
+        //         case 3:
+        //             {Matrix.print();
+        //             break;}
+        //         case 4:
+        //            { Matrix.get();
+        //             break;}
+        //         case 5:
+        //             {Matrix.set();
+        //             break;}
+        //         case 6:
+        //             {Matrix.transpose();
+        //             break;}
+        //         case 7:
+        //             {Matrix.swap_rows();
+        //             break;}
+        //     }
+        // }
+  
     return 0;
 }
