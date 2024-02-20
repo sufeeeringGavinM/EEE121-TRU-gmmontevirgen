@@ -297,7 +297,7 @@ class matrixMxN: public matrix{
         matrixMxN(vector<string> command);
 };
 
-matrixMxN::matrixMxN(vector<string> command){
+matrixMxN::matrixMxN(vector<string> command) : matrix(command){
     (*this).command=command;
     rows=stoi(command[1]);
     columns=stoi(command[2]);
@@ -312,7 +312,7 @@ class matrixNxN: public matrix{
         matrixNxN(vector<string> command);
 };
 
-matrixNxN::matrixNxN(vector<string> command){
+matrixNxN::matrixNxN(vector<string> command) : matrix(command){
     (*this).command=command;
     rows=stoi(command[1]);
     columns=stoi(command[1]);
@@ -337,34 +337,39 @@ int main(){
                 case 1:
                     std::cout << "UNSUPPORTED COMMAND" << endl << endl;
                     break;
-                case 2:
+                case 2:{
                     switch(Matrix.command.size()){
                         case 2:
-                            ;  //rows and cols
-                            break;
+                            {matrixNxN RealMatrix(Matrix.command); //rows and cols
+                            Matrix=RealMatrix;
+                            cout<< typeid(RealMatrix).name()<<endl;
+                            break;}
                         case 3:
-                            ;
-                            break;
+                            {matrixMxN RealMatrix(Matrix.command);
+                            Matrix=RealMatrix;
+                            break;}
                     }
                     Matrix.init();
-                    break;
+                    break;}
                 case 3:
-                    Matrix.print();
-                    break;
+                    {Matrix.print();
+                    break;}
                 case 4:
-                    Matrix.get();
-                    break;
+                   { Matrix.get();
+                    break;}
                 case 5:
-                    Matrix.set();
-                    break;
+                    {Matrix.set();
+                    break;}
                 case 6:
-                    Matrix.transpose();
-                    break;
+                    {Matrix.transpose();
+                    break;}
                 case 7:
-                    Matrix.swap_rows();
-                    break;
+                    {Matrix.swap_rows();
+                    break;}
             }
         }
+        cout<< typeid(Matrix).name()<<endl;
+        
     }
     return 0;
 }
