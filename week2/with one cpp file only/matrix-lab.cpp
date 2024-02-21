@@ -70,45 +70,45 @@ int matrix::inputCheck(){
     if(mat.empty()){ //only check for init and exit
         if(command[0]=="INIT"){
             if(command.size()<3){
-                std::cout << "UNSUPPORTED COMMAND" << endl << endl; //default for error
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1; //default for error
             }
             try{
                 if(command.size()==3){ 
                     if(stoi(command[2])<1){
-                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
                 
                 if(command.size()==4){
                     if (stoi(command[3]) <1 || stoi(command[2]) <1){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
                 if(command.size()>4){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                 }
                 for(int i=2; i<command.size(); i++){ //handling nonnumber characters
                     if(!isNumber(command[i])){
-                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
             }
             catch(exception){
-                std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
             }
             (*this).init();
             return 0;
         }
         if (command[0]=="EXIT"){
             if(command.size()!=1){
-                std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
             }
             //alkwejfiowejiowjfaeiowejwfaeiojifjiwjfe// 
             exit(0);
             return 0;
         }
         else{
-            std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+            std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
         }
     }
     else{
@@ -119,20 +119,20 @@ int matrix::inputCheck(){
             try{
                 if(command.size()==3){ 
                     if(stoi(command[2])<1){
-                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
                 if(command.size()==4){
                     if (stoi(command[3]) <1 || stoi(command[2]) <1){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
                 if(command.size()>4){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                 }
                 for(int i=2; i<command.size(); i++){ //handling nonnumber characters
                     if(!isNumber(command[i])){
-                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
             }
@@ -197,13 +197,13 @@ int matrix::inputCheck(){
             try{
                 for(int i=2; i<command.size(); i++){ 
                     if(!isNumber(command[i])){
-                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                         return 1;
                     }
                 }
             }
             catch(exception){
-                std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                 return 1;
             }
             (*this).swap_rows();
@@ -212,11 +212,11 @@ int matrix::inputCheck(){
         if(command[1]=="+"){
             try{
                 if(command.size()!=3){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     return 1;
                 }
                 if((enderChest.count(command[0])==0) || (enderChest.count(command[2])==0)){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     return 1;
                 }
                 int R1=enderChest.find(command[0])->second.size();
@@ -224,25 +224,25 @@ int matrix::inputCheck(){
                     int R2=enderChest.find(command[2])->second.size();
                     int C2=enderChest.find(command[2])->second[0].size();
                 if( (R1!=R2) || (C1!=C2)){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     return 1;
                 }
                 (*this).addition();
                 return 0;
             }
             catch(exception){
-                std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                 return 1;
             }
         }
         if(command[1]=="-"){
             try{
                 if(command.size()!=3){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     return 1;
                 }
                 if((enderChest.count(command[0])==0) || (enderChest.count(command[2])==0)){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     return 1;
                 }
                 int R1=enderChest.find(command[0])->second.size();
@@ -250,20 +250,20 @@ int matrix::inputCheck(){
                     int R2=enderChest.find(command[2])->second.size();
                     int C2=enderChest.find(command[2])->second[0].size();
                 if( (R1!=R2) || (C1!=C2)){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     return 1;
                 }
                 (*this).subtraction();
                 return 0;
             }
             catch(exception){
-                std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                 return 1;
             }
         }
         if (command[0]=="EXIT"){
             if(command.size()!=1){
-                std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                 return 1;
             }
             exit(0);
@@ -271,7 +271,7 @@ int matrix::inputCheck(){
             ///w99w9w 999 iii oooo ooo!!//
         }
         else{
-            std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+            std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
             return 1;
         }
     }

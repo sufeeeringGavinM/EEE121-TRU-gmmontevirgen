@@ -33,45 +33,45 @@ int matrix::inputCheck(){
     if(mat.empty()){ //only check for init and exit
         if(command[0]=="INIT"){
             if(command.size()<3){
-                std::cout << "UNSUPPORTED COMMAND" << endl << endl; //default for error
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl; return 1;//default for error
             }
             try{
                 if(command.size()==3){ 
                     if(stoi(command[2])<1){
-                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
                 
                 if(command.size()==4){
                     if (stoi(command[3]) <1 || stoi(command[2]) <1){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
                 if(command.size()>4){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                 }
                 for(int i=2; i<command.size(); i++){ //handling nonnumber characters
                     if(!isNumber(command[i])){
-                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
             }
             catch(exception){
-                std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
             }
             (*this).init();
             return 0;
         }
         if (command[0]=="EXIT"){
             if(command.size()!=1){
-                std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
             }
             //alkwejfiowejiowjfaeiowejwfaeiojifjiwjfe// 
             exit(0);
             return 0;
         }
         else{
-            std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+            std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
         }
     }
     else{
@@ -82,20 +82,20 @@ int matrix::inputCheck(){
             try{
                 if(command.size()==3){ 
                     if(stoi(command[2])<1){
-                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
                 if(command.size()==4){
                     if (stoi(command[3]) <1 || stoi(command[2]) <1){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
                 if(command.size()>4){
-                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                    std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                 }
                 for(int i=2; i<command.size(); i++){ //handling nonnumber characters
                     if(!isNumber(command[i])){
-                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;
+                        std::cout << "UNSUPPORTED COMMAND" << endl << endl;return 1;
                     }
                 }
             }
@@ -339,7 +339,7 @@ void matrix::transpose(){
         enderChest.find(command[1])->second.clear();
         enderChest.find(command[1])->second.resize(columns, vector<int>(rows));
         enderChest.find(command[1])->second=mat2;
-        cout << rows << "x" << columns << " MATRIX" << endl << endl;
+        std::cout << "Matrix " << command[1] << " : " << columns << "x" << rows << endl << endl;
         }
     catch(exception){
         std::cout << "UNSUPPORTED COMMAND" << endl << endl;
@@ -354,7 +354,7 @@ void matrix::swap_rows(){
             vector<int> temprow = enderChest.find(command[1])->second[row1];
             enderChest.find(command[1])->second[row1]=enderChest.find(command[1])->second[row2];
             enderChest.find(command[1])->second[row2]=temprow;
-            cout << "SWAPPED ROWS " << command[1] << " AND " << command[2] << endl << endl; 
+            cout << "SWAPPED ROWS " << command[2] << " AND " << command[3] << endl << endl; 
         }
         else{
             std::cout << "UNSUPPORTED COMMAND" << endl << endl;
