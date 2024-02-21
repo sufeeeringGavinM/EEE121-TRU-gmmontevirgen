@@ -1,5 +1,5 @@
-#ifndef MATRIXNXN_H
-#define MATRIXNXN_H
+#ifndef MATRIXMXN_H
+#define MATRIXMXN_H
 #include "matrix.h"
 using namespace std;
 
