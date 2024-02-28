@@ -45,8 +45,8 @@ class ParkingEntry{
         time_t entryTime;
         time_t exitTime=(time_t)(-1);
 
-        double totalhours=0;
-        int totalCost=0;
+        int totalhours = round((difftime(time(0), entryTime))/3600); // difference between two time_t types in seconds/ divided by 3600;
+        int totalCost;
         
         void toCsv();
         void getCost();
@@ -60,13 +60,14 @@ void ParkingEntry::toCsv(){
     cout<<std::put_time(std::localtime(&entryTime), "%H:%M:%S") <<","; //find out whatever this is
     
     if(exitTime==-1){
-        cout<< "0" <<",";  
+        cout<< "NONE" <<",";  
     }
     else{
         cout<<std::put_time(std::localtime(&exitTime), "%H:%M:%S") <<",";
     }
-        
+    totalhours = round((difftime(time(0), entryTime))/3600);
     cout<<round(totalhours)<<",";
+    getCost();
     cout<< "P"<<totalCost<<",";
     cout<<std::put_time(std::localtime(&entryTime), "%d/%m/%y") <<",";
     cout<<manufacturer<<",";
@@ -79,17 +80,25 @@ void ParkingEntry::logEntry(){
 }
 
 void ParkingEntry::logExit(){
+    
     exitTime=std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 }
 
 void ParkingEntry::getCost(){
-    totalhours = (difftime(exitTime, entryTime))/3600; // difference between two time_t types in seconds/ divided by 3600
-    if(totalhours<=3){ 
+    totalhours = round((difftime(time(0), entryTime))/3600);
+    if(totalhours<3){ 
+        totalCost=0;
+        return;
+    }
+    if(totalhours==3){
         totalCost=50;
+        return;
     }
     else{
+        totalhours = round((difftime(time(0), entryTime))/3600);
         totalCost=50;
-        totalCost+=(round(totalhours)*20);
+        totalCost+=((round(totalhours)-3)*20);
+        return;
     }
 }
 
