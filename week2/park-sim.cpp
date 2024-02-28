@@ -69,7 +69,7 @@ void ParkingEntry::toCsv(){
     cout<<round(totalhours)<<",";
     getCost();
     cout<< "P"<<totalCost<<",";
-    cout<<std::put_time(std::localtime(&entryTime), "%m/%d/%y") <<",";
+    cout<<std::put_time(std::localtime(&entryTime), "%a,%m/%d/%y") <<",";
     cout<<manufacturer<<",";
     cout<<modelName<<",";
     cout<<modelYear<<endl;
@@ -86,16 +86,15 @@ void ParkingEntry::logExit(){
 
 void ParkingEntry::getCost(){
     totalhours = round((difftime(time(0), entryTime))/3600);
-    if(totalhours<3){ 
+    if(totalhours<3){  // FREE PARKING!!
         totalCost=0;
         return;
     }
-    if(totalhours==3){
+    if(totalhours==3){ // No free parking 
         totalCost=50;
         return;
-    }
-    else{
-        totalhours = round((difftime(time(0), entryTime))/3600);
+    } 
+    else{ //theft
         totalCost=50;
         totalCost+=((round(totalhours)-3)*20);
         return;
