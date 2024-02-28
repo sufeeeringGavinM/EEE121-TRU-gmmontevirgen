@@ -69,7 +69,7 @@ void ParkingEntry::toCsv(){
     cout<<round(totalhours)<<",";
     getCost();
     cout<< "P"<<totalCost<<",";
-    cout<<std::put_time(std::localtime(&entryTime), "%d/%m/%y") <<",";
+    cout<<std::put_time(std::localtime(&entryTime), "%m/%d/%y") <<",";
     cout<<manufacturer<<",";
     cout<<modelName<<",";
     cout<<modelYear<<endl;
