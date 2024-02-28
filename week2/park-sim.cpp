@@ -5,6 +5,7 @@
 #include <ctime>
 #include <chrono>
 #include <cmath>
+#include <iomanip>
 using namespace std;
 
 vector<string> parser(string splitMe){ // taken from https://www.scaler.com/topics/split-string-in-cpp/ 
@@ -41,9 +42,9 @@ class ParkingEntry{
         string modelName;
         string modelYear;
         
-        time_t entrydate;
         time_t entryTime;
-        time_t exitTime=0;
+        time_t exitTime=(time_t)(-1);
+
         double totalhours=0;
         int totalCost=0;
         
@@ -54,31 +55,36 @@ class ParkingEntry{
 };
 
 void ParkingEntry::toCsv(){
-    tm *time=localtime(&entryTime);
-    tm *time2=localtime(&exitTime);
-    cout<<plate<<",";
-    cout<<time->tm_hour<<":"<<time->tm_min<<":"<<time->tm_sec<<","; //find out whatever this is
     
-    cout<<time2->tm_hour<<":"<<time2->tm_min<<":"<<time2->tm_sec<<",";
-    cout<<totalhours<<",";
-    cout<<totalCost<<",";
-    cout<<entrydate<<",";
+    cout<<plate<<",";
+    cout<<std::put_time(std::localtime(&entryTime), "%H:%M:%S") <<","; //find out whatever this is
+    
+    if(exitTime==-1){
+        cout<< "0" <<",";  
+    }
+    else{
+        cout<<std::put_time(std::localtime(&exitTime), "%H:%M:%S") <<",";
+    }
+        
+    cout<<round(totalhours)<<",";
+    cout<< "P"<<totalCost<<",";
+    cout<<std::put_time(std::localtime(&entryTime), "%d/%m/%y") <<",";
     cout<<manufacturer<<",";
     cout<<modelName<<",";
     cout<<modelYear<<endl;
 }   //<<time2->tm_hour<<":"<<time2->tm_min<<":"<<time2->tm_sec<< FOR TIME
 
 void ParkingEntry::logEntry(){
-    entryTime=time(NULL);
+    entryTime=std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()); //https://stackoverflow.com/a/27856440
 }
 
 void ParkingEntry::logExit(){
-    exitTime=time(NULL);
+    exitTime=std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 }
 
 void ParkingEntry::getCost(){
-    totalhours = (difftime(exitTime, entryTime))/3600;
-    if(totalhours<=3){
+    totalhours = (difftime(exitTime, entryTime))/3600; // difference between two time_t types in seconds/ divided by 3600
+    if(totalhours<=3){ 
         totalCost=50;
     }
     else{
@@ -87,58 +93,114 @@ void ParkingEntry::getCost(){
     }
 }
 
-ParkingEntry inputDetect(vector<string> command, map<string, ParkingEntry> &database, map<string,ParkingEntry> &history){
+void inputDetect(vector<string> command, map<string, ParkingEntry> &database, map<string,ParkingEntry> &history){
     if(command[0]=="PARK"){
-        ParkingEntry newParkYipee;
-        newParkYipee.plate=command[1];
-        newParkYipee.manufacturer=command[2];
-        newParkYipee.modelName=command[3];
-        newParkYipee.modelYear=command[4];
-        newParkYipee.logEntry();
-        database.insert({newParkYipee.plate, newParkYipee});
-        return newParkYipee;
+        if(command.size()==5){
+            ParkingEntry newParkYipee;
+            newParkYipee.plate=command[1];
+            newParkYipee.manufacturer=command[2];
+            newParkYipee.modelName=command[3];
+            newParkYipee.modelYear=command[4];
+            newParkYipee.logEntry();
+            database.insert({newParkYipee.plate, newParkYipee});
+            return;
+            }
+        else{
+            cout << "UNSUPPORTED COMMAND"<<endl<<endl;
+            return;
+        }
     }
 
     if(command[0]=="EXIT"){
         try{
-            ParkingEntry currentCar=database.find(command[1])->second;
-            currentCar.toCsv();
-            currentCar.logExit();
-            auto moveIt=database.extract(command[1]); // a way to move from one map to another https://stackoverflow.com/a/52541208
-            history.insert(std::move(moveIt)); //
-            currentCar.logExit();
-            currentCar.getCost();
-            ParkingEntry foo;
-            return foo;
+            if(command.size()==2 && database.find(command[1])!=database.end()){
+                ParkingEntry &currentCar=database.find(command[1])->second;
+                
+                currentCar.logExit();
+                currentCar.getCost();
+                currentCar.toCsv();
+
+                auto moveIt=database.extract(command[1]); // a way to move from one map to another https://stackoverflow.com/a/52541208
+                history.insert(std::move(moveIt)); //
+                cout<<endl;
+                return;
+                }
+            else{
+                cout << "UNSUPPORTED COMMAND"<<endl<<endl;
+                return;
             }
-        catch(int num){
-            cout << "UNSUPPORTED COMMAND"<<endl;
+        }
+        catch(int& num){
+            cout << "UNSUPPORTED COMMAND"<<endl<<endl;
+            return;
         }
     }
 
     if(command[0]=="FIND"){
         try{
-            database.at(command[1]).toCsv();
-            ParkingEntry foo;
-            return foo;
+            if(command.size()==2 && database.find(command[1])!=database.end()){
+              database.at(command[1]).toCsv(); 
+              cout<<endl;
+              return;
+            }
+            else{
+                cout << "CAR NOT FOUND"<<endl<<endl;
+                return;
+            }
         }
         catch(int num){
-            cout<<"CAR NOT FOUND"<<endl;
+            cout<<"UNSUPPORTED COMMAND"<<endl<<endl;
+            return;
         }
     }
 
     if(command[0]=="LIST"){
-        for(auto & [k,v]: database){
-            v.toCsv();
+        if(command.size()==1){
+            if(database.size()!=0){
+                for(auto & [ke,ve]: database){
+                    ve.toCsv();
+                }
+                cout<<endl;
+                return;
+            }
+            else{
+                cout<< "EMPTY CURRENT DATABASE :(" << endl<<endl;
+                return;
+            }
+        }
+        else{
+            cout << "UNSUPPORTED COMMAND"<<endl<<endl;
+            return;
         }
     }
 
     if(command[0]=="LOG"){
-
+        if(command.size()==1){
+            if(history.size()!=0){
+                for(auto & [k,v]: history){
+                    v.toCsv();
+                }
+                cout<<endl;
+                return;
+            }
+            else{
+                cout<< "EMPTY LOG :(" << endl<<endl;
+                return;
+            }
+        }
+        else{
+            cout << "UNSUPPORTED COMMAND"<<endl<<endl;
+            return;
+        }
     }
 
     if(command[0]=="QUIT"){
+        exit(0);
+    }
 
+    else{
+        cout << "UNSUPPORTED COMMAND"<<endl<<endl;
+        return;
     }
 
 }
