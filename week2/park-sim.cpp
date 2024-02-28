@@ -103,6 +103,10 @@ void ParkingEntry::getCost(){
 
 void inputDetect(vector<string> command, map<string, ParkingEntry> &database, map<string,ParkingEntry> &history){
     if(command[0]=="PARK"){
+        if(database.size()==500){
+            cout << "MAXIMUM PARKING REACHED!"<<endl<<endl;
+            return;   
+        }
         if(command.size()==5){
             ParkingEntry newParkYipee;
             newParkYipee.plate=command[1];
@@ -183,6 +187,9 @@ void inputDetect(vector<string> command, map<string, ParkingEntry> &database, ma
     }
 
     if(command[0]=="LOG"){
+        if(history.size()==1000){
+            cout << "PARKING LOG DATABASE REACHED MAX!" <<endl<<endl;
+        }
         if(command.size()==1){
             if(history.size()!=0){
                 for(auto & [k,v]: history){
