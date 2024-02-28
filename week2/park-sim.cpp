@@ -216,7 +216,6 @@ void inputDetect(vector<string> command, map<string, ParkingEntry> &database, ma
 int main(){
     map<string, ParkingEntry> theDatabase;
     map<string, ParkingEntry> History;
-    vector<string> command;
     while(true){
         inputDetect(inputter(), theDatabase, History);
     }
