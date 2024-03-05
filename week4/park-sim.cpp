@@ -229,7 +229,7 @@ void inputDetect(vector<string> command, map<string, ParkingEntry> &database, ma
         else{//the bubble sort
             for(int i=0; i<databaseV.size()-1; i++){
                 for(int j=0; j<databaseV.size()-i-1; j++){
-                    if(databaseV[j].plate>databaseV[j+1].plate){
+                    if(databaseV[j].modelYear>databaseV[j+1].modelYear){
                         ParkingEntry temp = databaseV[j];
                         databaseV[j]=databaseV[j+1];
                         databaseV[j+1]=temp;  
