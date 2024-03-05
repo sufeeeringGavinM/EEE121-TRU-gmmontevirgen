@@ -259,7 +259,9 @@ void inputDetect(vector<string> command, map<string, ParkingEntry> &database, ma
                 return;
             }
             else{
+                cout<<endl;
                 databaseV[where].toCsv();
+                cout<<endl;
                 return;
             }
         }
