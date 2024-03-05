@@ -108,12 +108,13 @@ int binarySearch(vector<ParkingEntry> database, int l, int r, string x)
         int mid = l+(r-l)/2;
         cout<<"MID-"<<mid<<" : ";
         database[mid].toCsv();
-        if (database[mid].plate == x) //edge case
+        if (database[mid].plate == x){ //edge case
             return mid;
+        }
 
-        if (database[mid].plate > x) //assuming sorted, so if element we're looking for is not to the right it can only be to the left 
+        if (database[mid].plate > x){ //assuming sorted, so if element we're looking for is not to the right it can only be to the left 
             return binarySearch(database, l, mid - 1, x);
- 
+        }
         return binarySearch(database, mid + 1, r, x); //same thing as above but to other side
     }
  
