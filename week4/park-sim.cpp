@@ -8,6 +8,8 @@
 #include <iomanip>
 using namespace std;
 
+
+
 vector<string> parser(string splitMe){ // taken from https://www.scaler.com/topics/split-string-in-cpp/ 
     vector<string> splitted;
     char splitter=' ';
@@ -100,7 +102,25 @@ void ParkingEntry::getCost(){
         return;
     }
 }
+int binarySearch(vector<ParkingEntry> database, int l, int r, string x)
+{
+    if (r >= l) {
+        int mid = l+(r-l)/2;
+        cout<<"MID-"<<mid<<" : ";
+        database[mid].toCsv();
+        if (database[mid].plate == x) //edge case
+            return mid;
 
+        if (database[mid].plate > x) //assuming sorted, so if element we're looking for is not to the right it can only be to the left 
+            return binarySearch(database, l, mid - 1, x);
+ 
+        return binarySearch(database, mid + 1, r, x); //same thing as above but to other side
+    }
+ 
+    // We reach here when element is not
+    // present in array
+    return -1;
+}
 void inputDetect(vector<string> command, map<string, ParkingEntry> &database, map<string,ParkingEntry> &history, vector<ParkingEntry> &databaseV){
     if(command[0]=="PARK"){
         if(database.size()==10000){
@@ -210,18 +230,42 @@ void inputDetect(vector<string> command, map<string, ParkingEntry> &database, ma
         }
     }
     if(command[0]=="BFIND"){
+        //SORTS first
+        for(int i=0; i<databaseV.size()-1; i++){
+            for(int j=0; j<databaseV.size()-i-1; j++){
+                if(databaseV[j].plate>databaseV[j+1].plate){
+                    ParkingEntry temp = databaseV[j];
+                    databaseV[j]=databaseV[j+1];
+                    databaseV[j+1]=temp;  
+                    // cout<<"ITER" <<i+1<<" : ";
+                    // databaseV[j].toCsv();
+                }
+            }
+            
+        }
+        database.clear();
+        for(ParkingEntry& i : databaseV ){ //REINSERT EVERYRTHING INTO MAP DATABASE
+            database.insert({i.plate, i});
+        }
         if(command.size()!=2){
             cout << "UNSUPPORTED COMMAND"<<endl<<endl;
             return;
         }
         else{
-
+            int where=binarySearch(databaseV, 0, databaseV.size()-1, command[1]);
+            if(where==-1){
+                cout <<"PLATE NOT FOUND"<<endl<<endl;
+                return;
+            }
+            else{
+                databaseV[where].toCsv();
+                return;
+            }
         }
 
     }
     if(command[0]=="BSORT"){
         int counter=0;
-        bool theLisanAlGaib=true;
         if(command.size()!=1){
             cout << "UNSUPPORTED COMMAND"<<endl<<endl;
             return;
@@ -229,12 +273,12 @@ void inputDetect(vector<string> command, map<string, ParkingEntry> &database, ma
         else{//the bubble sort
             for(int i=0; i<databaseV.size()-1; i++){
                 for(int j=0; j<databaseV.size()-i-1; j++){
-                    if(databaseV[j].modelYear>databaseV[j+1].modelYear){
+                    if(databaseV[j].plate>databaseV[j+1].plate){
                         ParkingEntry temp = databaseV[j];
                         databaseV[j]=databaseV[j+1];
                         databaseV[j+1]=temp;  
-                        cout<<"ITER" <<i+1<<" : ";
-                        databaseV[j].toCsv();
+                        // cout<<"ITER" <<i+1<<" : ";
+                        // databaseV[j].toCsv();
                     }
                 }
                 
