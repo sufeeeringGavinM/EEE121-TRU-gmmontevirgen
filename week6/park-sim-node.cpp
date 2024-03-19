@@ -311,9 +311,9 @@ database.logSize++;
     if(command[0]=="EXIT"){
         try{
             if(command.size()==2){
+database.historySize++;
                 database.exit(command[1]);
                 database.logSize--;
-database.historySize++;
                 cout<<endl;
                 return;
             }
