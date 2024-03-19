@@ -135,16 +135,31 @@ int historySize;
                         if(historySize==PARKING_HISTORY_CAPACITY){      
                             removeBack();
                             T &currentCar=temp->data;
-                            currentCar.logExit();
-                            currentCar.getCost();
-                            currentCar.toCsv();
-historySize=PARKING_HISTORY_CAPACITY;
+                            if(currentCar.exitTime==-1){
+                                currentCar.logExit();
+                                currentCar.getCost();
+                                currentCar.toCsv();
+                                historySize=PARKING_HISTORY_CAPACITY;
+                                return;
+                            }
+                            else{
+                                cout << "UNSUPPORTED COMMAND" <<endl;
+                                return;
+                            }
                         }
                         else{
-                            T &currentCar=temp->data;
-                            currentCar.logExit();
-                            currentCar.getCost();
-                            currentCar.toCsv();
+                           T &currentCar=temp->data;
+                            if(currentCar.exitTime==-1){
+                                currentCar.logExit();
+                                currentCar.getCost();
+                                currentCar.toCsv();
+                                historySize=PARKING_HISTORY_CAPACITY;
+                                return;
+                            }
+                            else{
+                                cout << "UNSUPPORTED COMMAND" <<endl;
+                                return;
+                            }
                         }
                     }
                     temp=temp->next;
