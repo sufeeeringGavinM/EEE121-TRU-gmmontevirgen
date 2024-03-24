@@ -62,6 +62,8 @@ class ParkEntryList {
         ParkEntryNode<T>* head;
         ParkEntryNode<T>* tail;
         int size;
+int logSize;
+int historySize;
         ParkEntryList();
         void addFront(T val);
         void addBack(T val);
@@ -130,18 +132,34 @@ class ParkEntryList {
             if(temp!=NULL){
                 while(temp!=NULL){
                     if(temp->data.plate==plato){
-                        if(size==PARKING_HISTORY_CAPACITY){      
+                        if(historySize==PARKING_HISTORY_CAPACITY){      
                             removeBack();
                             T &currentCar=temp->data;
-                            currentCar.logExit();
-                            currentCar.getCost();
-                            currentCar.toCsv();
+                            if(currentCar.exitTime==-1){
+                                currentCar.logExit();
+                                currentCar.getCost();
+                                currentCar.toCsv();
+                                historySize=PARKING_HISTORY_CAPACITY;
+                                return;
+                            }
+                            else{
+                                cout << "UNSUPPORTED COMMAND" <<endl;
+                                return;
+                            }
                         }
                         else{
-                            T &currentCar=temp->data;
-                            currentCar.logExit();
-                            currentCar.getCost();
-                            currentCar.toCsv();
+                           T &currentCar=temp->data;
+                            if(currentCar.exitTime==-1){
+                                currentCar.logExit();
+                                currentCar.getCost();
+                                currentCar.toCsv();
+                                historySize=PARKING_HISTORY_CAPACITY;
+                                return;
+                            }
+                            else{
+                                cout << "UNSUPPORTED COMMAND" <<endl;
+                                return;
+                            }
                         }
                     }
                     temp=temp->next;
@@ -284,7 +302,7 @@ void ParkingEntry::getCost(){
 
 void inputDetect(vector<string> command, ParkEntryList<ParkingEntry> &database){
     if(command[0]=="PARK"){
-        if(database.getSize()==MAX_PARKING_CAPACITY){
+        if(database.logSize==MAX_PARKING_CAPACITY){
             cout << "PARKING FULL"<<endl<<endl;
             return;   
         }
@@ -296,6 +314,7 @@ void inputDetect(vector<string> command, ParkEntryList<ParkingEntry> &database){
             newParkYipee.modelYear=command[4];
             newParkYipee.logEntry();
             database.addFront(newParkYipee);
+database.logSize++;
             return;
             }
         else{
@@ -307,8 +326,9 @@ void inputDetect(vector<string> command, ParkEntryList<ParkingEntry> &database){
     if(command[0]=="EXIT"){
         try{
             if(command.size()==2){
+database.historySize++;
                 database.exit(command[1]);
-                
+                database.logSize--;
                 cout<<endl;
                 return;
             }
