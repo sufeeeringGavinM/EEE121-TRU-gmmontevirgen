@@ -7,6 +7,7 @@ class TrieNode{ //noticabely trimmed off unneccessary variables like is_leaf
         char data; //either a one or a zero / dit or dah
         TrieNode *children[2]; //binary !! max of two nodes only per node
         string loc; //save "location" of node within trie e.g: e is 0, a is 01
+        // dang, i couldve applied this location thing to the prefixGoodness problem (but like eeeehhh)
         TrieNode(char ooz){
             data=ooz;
             children[0]=NULL;

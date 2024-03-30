@@ -40,7 +40,7 @@ class Trieee{
                     toCrawl->children[index]=new TrieNode(); // children[0] having a new TrieNode means a zero, children[1] means a one. traversing through the trie node for a string 101 would then be like root->children[1]->children[0]->children[1].
                     numberOfNodes++; //tracker of num of nodes
                 }
-                if(toCrawl->children[index]->is_leaf==true){
+                if(i==(key.size()-1) && toCrawl->children[index]->is_leaf==true){ //if key's leaf node already exists, we are adding a copy
                     numberOfDigits++;
                     toCrawl->children[index]->copies++; // if we are adding a duplicate string, we simply add 1 to its "copies". only leaf nodes can have duplicates!
                     return;
@@ -61,7 +61,7 @@ class Trieee{
                 return;
             if(node->children[0] != NULL && node->children[1] !=NULL){ // a prefix is something with at least two children
                 twoprefixes.push_back(pref); // collect prefix itself
-                prefixNodes.push_back(node); // collect node 
+                prefixNodes.push_back(node); // collect node containing prefix
             }
             if(node->children[0] != NULL){
                 findPrefixes(node->children[0], pref+'0'); // adds a 0 to pref, as children[0] being not null indicates a zero
@@ -73,7 +73,7 @@ class Trieee{
             //for the recursion to go thru the entire tree , I followed how this article below did it. though instead of with the aim of printing everything, it was just to find those with at least two children (prefixes) 
             // https://www.ritambhara.in/print-all-words-in-a-trie-data-structure/
         }
-        void getNumberofChildren(TrieNode* node, int &substrings){
+        void getNumberofChildren(TrieNode* node, int &substrings){ //vibes r giving O(nlogn)
             if(node==NULL){
                 return;
             }
@@ -82,7 +82,7 @@ class Trieee{
                 substrings+=node->copies; // if a leaf node has copies, add them
             }
             if(node->children[0]!=NULL){
-                getNumberofChildren(node->children[0], substrings);
+                getNumberofChildren(node->children[0], substrings); //traverse the hell out of that trie
                 
             }
             if(node->children[1]!=NULL){
@@ -90,7 +90,6 @@ class Trieee{
             }
         }
         void printDetails(){
-
             string longestPrefix;
             int longestPG=0;
             int substrings=0;
@@ -105,7 +104,7 @@ class Trieee{
                 getNumberofChildren(prefixNodes[i], substrings);
                 currentPrefixSize=twoprefixes[i].size();
                 currentPG=currentPrefixSize*substrings;
-                if(currentPrefixSize>longestPrefixSize && currentPG >= longestPG){
+                if(currentPrefixSize>longestPrefixSize && currentPG >= longestPG){ //the longer prefix the better , while also maximizing prefixgoodness
                     longestPG=currentPG;
                     mostsubstrings=substrings;
                     longestPrefix=twoprefixes[i];
