@@ -7,7 +7,7 @@ using namespace std;
 
 class TrieNode{
     public:
-        // char data; //either a one or a zero / dit or dah (foreshadowing)
+        // char data; //either a one or a zero / dit or dah (foreshadowing) DONT NEED THIS FOR NOW HTOUGH
         TrieNode* children[2]; //binary !! max of two nodes only per node UPDATE: I REGRET THIS HOW WOULD I HANDLE DUPLICATES!? UPDATE2: ok just do add anothe property of the node indicating how many copies of it exist (if ther are)
         bool is_leaf; 
         int copies; //number of copies

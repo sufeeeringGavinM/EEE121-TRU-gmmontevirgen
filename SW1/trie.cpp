@@ -8,16 +8,14 @@ class TrieNode{
         TrieNode *children[2]; //binary !! max of two nodes only per node
         bool is_leaf; //life easy
         int copies;
-        TrieNode(char ooz); //oneorzero
+        TrieNode(char ooz){
+            data=ooz;
+            is_leaf=false;
+            copies=0;
+            children[0]=NULL;
+            children[1]=NULL;
+        }
 };
-
-TrieNode::TrieNode(char ooz){
-    data=ooz;
-    is_leaf=false;
-    copies=0;
-    children[0]=NULL;
-    children[1]=NULL;
-}
 
 class Trieee{
     public:
