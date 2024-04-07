@@ -111,8 +111,9 @@ class Trieee{
                     longestPrefixSize=currentPrefixSize;
                 }
             }
-            if(mostsubstrings==0 || biggest.size()>longestPG){ //special case when there are no common prefixes
-                //the largest string will simply result in the greatest prefix goodness, as max prefix length in this case is just the entire string itself, and no. of substrings is 1
+            if(mostsubstrings==0 || biggest.size()>longestPG){ 
+                //special case when there are no common prefixes
+                // also if the largest string is just straight up greater than the max prefix goodness
                 mostsubstrings=1;
                 longestPrefixSize=biggest.size();
                 longestPG=longestPrefixSize;
