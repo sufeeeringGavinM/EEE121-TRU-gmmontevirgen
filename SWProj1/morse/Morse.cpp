@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 class TrieNode{ //noticabely trimmed off unneccessary variables like is_leaf
@@ -17,6 +20,12 @@ class TrieNode{ //noticabely trimmed off unneccessary variables like is_leaf
 class Trieee{
     public:
         TrieNode* root;
+        vector<string> valids = {
+            ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", 
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", 
+            "..-", "...-", ".--", "-..-", "-.--", "--..", ".----", "..---", "...--", 
+            "....-", ".....", "-....", "--...", "---..", "----.", "-----", ".-.-.-"
+        };
         Trieee(){
             root=new TrieNode('\0');
         }
@@ -37,6 +46,7 @@ class Trieee{
                     keyConverted+='-';
                 }
             }
+            valids.push_back(key);
             toCrawl->data=repr;
             toCrawl->loc=keyConverted; 
         }
@@ -60,6 +70,7 @@ class Trieee{
         string endecode(string input){ //encode or decode?
             bool encode=true;
             string result;
+            string currentChar="";
             int i;
             TrieNode* crawler=root;
             // https://cplusplus.com/reference/string/string/find/
@@ -69,21 +80,38 @@ class Trieee{
             } 
             if(encode==false){ //O(n) where n is length of thing to be decoded
                 for(i=0; i<input.size(); i++){ // O(n)
+                    if((find(valids.begin(),valids.end(),currentChar))==valids.end() && currentChar!="" ){ //check if current charafcter is valid
+                        result+="#"; //error character
+                        currentChar=""; //current char in morse code **
+                        crawler=root; //
+                    }
                     if(input[i]=='.'){
                         crawler=crawler->children[0]; //0 is .
+                        currentChar.push_back('.');
                     }
                     if(input[i]=='-'){
                         crawler=crawler->children[1]; //1 is -
+                        currentChar.push_back('-');
                     }
                     if(input[i]==' '){
                         result.push_back(crawler->data); //take letter every space
                         crawler=root;
+                        currentChar="";
                     }
                     if(input[i]=='/'){
+                        result.push_back(crawler->data);
                         result.push_back(' ');
+                        currentChar="";
+                        crawler=root;
                     }
                     if(i==(input.size()-1)){
+                        if((find(valids.begin(),valids.end(),currentChar))==valids.end() && currentChar!="" ){
+                            result+="#";
+                            currentChar="";
+                            return result;
+                        }
                         result.push_back(crawler->data);
+                        return result;
                     }
                 }
             }
