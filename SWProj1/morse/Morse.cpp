@@ -80,7 +80,7 @@ class Trieee{
             } 
             if(encode==false){ //O(n) where n is length of thing to be decoded
                 for(i=0; i<input.size(); i++){ // O(n)
-                    if((find(valids.begin(),valids.end(),currentChar))==valids.end() && currentChar!="" ){ //check if current charafcter is valid
+                    if((find(valids.begin(),valids.end(),currentChar))==valids.end() && currentChar!="" && currentChar!="..--" && currentChar!="---." && currentChar!="----" ){ //check if current charafcter is valid, also the three conditions at the end are just specfific cases i found in the morse tree where the condition just kind of does not work
                         result+="#"; //error character
                         currentChar=""; //current char in morse code **
                         crawler=root; //
