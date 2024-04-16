@@ -10,7 +10,8 @@ class TrieNode{
         // char data; //either a one or a zero / dit or dah (foreshadowing) DONT NEED THIS FOR NOW HTOUGH
         TrieNode* children[2]; //binary !! max of two nodes only per node UPDATE: I REGRET THIS HOW WOULD I HANDLE DUPLICATES!? UPDATE2: ok just do add anothe property of the node indicating how many copies of it exist (if ther are)
         bool is_leaf; 
-        int copies; //number of copies
+        int copies=0; //number of copies
+        int substrings=0;
         TrieNode(){ //oneorzero (mr robot reference)
             // data=ooz; //realized later on i didnt really need this
             is_leaf=false;
@@ -38,13 +39,14 @@ class Trieee{
                 int index=key[i]-'0';
                 if((toCrawl->children[index])==NULL){
                     toCrawl->children[index]=new TrieNode(); // children[0] having a new TrieNode means a zero, children[1] means a one. traversing through the trie node for a string 101 would then be like root->children[1]->children[0]->children[1].
-                    numberOfNodes++; //tracker of num of nodes
+                    numberOfNodes++; //tracker of num of node
                 }
                 if(i==(key.size()-1) && toCrawl->children[index]->is_leaf==true){ //if key's leaf node already exists, we are adding a copy
                     numberOfDigits++;
                     toCrawl->children[index]->copies++; // if we are adding a duplicate string, we simply add 1 to its "copies". only leaf nodes can have duplicates!
                     return;
                 }
+                toCrawl->substrings+=1; // count children underneath each node 
                 toCrawl=toCrawl->children[index];
                 numberOfDigits++; //tracker of num of digits. we're going through key.size() might as well add a O(1) thingy here to collect key.size()'s value
             }
@@ -73,22 +75,6 @@ class Trieee{
             //for the recursion to go thru the entire tree , I followed how this article below did it. though instead of with the aim of printing everything, it was just to find those with at least two children (prefixes) 
             // https://www.ritambhara.in/print-all-words-in-a-trie-data-structure/
         }
-        void getNumberofChildren(TrieNode* node, int &substrings){ //vibes r giving O(nlogn)
-            if(node==NULL){
-                return;
-            }
-            if(node->is_leaf){
-                substrings++;
-                substrings+=node->copies; // if a leaf node has copies, add them
-            }
-            if(node->children[0]!=NULL){
-                getNumberofChildren(node->children[0], substrings); //traverse the hell out of that trie
-                
-            }
-            if(node->children[1]!=NULL){
-                getNumberofChildren(node->children[1], substrings);
-            }
-        }
         void printDetails(){
             string longestPrefix;
             int longestPG=0;
@@ -100,8 +86,7 @@ class Trieee{
             findPrefixes(root, "");
             
             for(int i=0; i<prefixStrings.size(); i++){
-                substrings=0;
-                getNumberofChildren(prefixNodes[i], substrings);
+                substrings=prefixNodes[i]->substrings;
                 currentPrefixSize=prefixStrings[i].size();
                 currentPG=currentPrefixSize*substrings;
                 if(currentPrefixSize>longestPrefixSize && currentPG >= longestPG){ //the longer prefix the better , while also maximizing prefixgoodness
