@@ -24,7 +24,7 @@ class Trieee{
     public:
         TrieNode* root;
         vector<TrieNode*> prefixNodes;
-        vector<string> twoprefixes; // 
+        vector<string> prefixStrings; // 
         int numberOfDigits=0;
         int numberOfNodes=1; //always ONE root node in there
         string biggest; //track biggest string for special case where no common prefixes exist
@@ -60,7 +60,7 @@ class Trieee{
             if(node == NULL)
                 return;
             if(node->children[0] != NULL && node->children[1] !=NULL){ // a prefix is something with at least two children
-                twoprefixes.push_back(pref); // collect prefix itself
+                prefixStrings.push_back(pref); // collect prefix itself
                 prefixNodes.push_back(node); // collect node containing prefix
             }
             if(node->children[0] != NULL){
@@ -99,15 +99,15 @@ class Trieee{
             int longestPrefixSize=0;
             findPrefixes(root, "");
             
-            for(int i=0; i<twoprefixes.size(); i++){
+            for(int i=0; i<prefixStrings.size(); i++){
                 substrings=0;
                 getNumberofChildren(prefixNodes[i], substrings);
-                currentPrefixSize=twoprefixes[i].size();
+                currentPrefixSize=prefixStrings[i].size();
                 currentPG=currentPrefixSize*substrings;
                 if(currentPrefixSize>longestPrefixSize && currentPG >= longestPG){ //the longer prefix the better , while also maximizing prefixgoodness
                     longestPG=currentPG;
                     mostsubstrings=substrings;
-                    longestPrefix=twoprefixes[i];
+                    longestPrefix=prefixStrings[i];
                     longestPrefixSize=currentPrefixSize;
                 }
             }
@@ -128,8 +128,8 @@ class Trieee{
             // DEBUGGING PURPOSES 
             // display each possible prefix
             
-            // for(int i=0; i<twoprefixes.size(); i++){
-            //     cout << twoprefixes[i] << endl;
+            // for(int i=0; i<prefixStrings.size(); i++){
+            //     cout << prefixStrings[i] << endl;
             // }
             // cout <<endl;
 
