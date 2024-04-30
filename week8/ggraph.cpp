@@ -190,16 +190,17 @@ int main(){
             }
         }
         else if (inputDetect(command, graph)==6){ //EDEL
-            //iterate through toNodes and fromNodes like before, find which ones contain the
+            //iterate through toNodes and fromNodes like before, find which ones contain the vertices in the necessary from and to vectors, delete them.
+            // dont delete vertex itself
         }
         else if (inputDetect(command, graph)==7){ //MPRINT
-
+            // iDK  
         }
         else if (inputDetect(command, graph)==8){ //APRINT
-
+            // IDK
         }
         else if (inputDetect(command, graph)==9){ //SPATH
-
+            // something
         }
         command=inputter();
     }
