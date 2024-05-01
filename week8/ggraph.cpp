@@ -434,7 +434,7 @@ int main(){
                 if(foundit==2){
                     int V=graph.activeVertices;
                     int E=graph.activeEdges;
-                    vector<string> narrowWayThrough(V);
+                    vector<string> narrowWayThrough;
                     vector<int> dist(V);
                     vector<string> pre(V);
                     int u,v;
@@ -479,10 +479,10 @@ int main(){
                     while(nextVertex!=command[1]){
                         if(graph.vertices[i]->data==nextVertex){
                             nextVertex=pre[i];
-                            cout<<graph.vertices[i]->data << " <- ";
+                            narrowWayThrough.push_back(graph.vertices[i]->data);
                         }
                         if(nextVertex==command[1]){
-                            cout<<nextVertex;
+                            narrowWayThrough.push_back(nextVertex);
                             break;
                         }
                         if(i==graph.activeVertices-1){
@@ -495,6 +495,10 @@ int main(){
                             break;
                         }
                     }
+                    for(int i=0; i<narrowWayThrough.size()-1;i++){
+                        cout<<narrowWayThrough[i]<< " -> ";
+                    }
+                    cout<<narrowWayThrough[narrowWayThrough.size()-1];
                     cout<<endl;
                 
                 }
