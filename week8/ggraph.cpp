@@ -148,7 +148,7 @@ int main(){
                 directed=true;
                 for(int i=0; i<stoi(command[1]); i++){
                     Node* newNode = new Node;
-                    newNode->data=" "; //NOBODYS GONNA NAME A VECTOR NULL RIGHT???
+                    newNode->data=" "; //NOBODYS GONNA NAME A VERTEX NOTHING RIGHT???
                     graph.vertices.push_back(newNode);
                 }
                 adjMatrix.resize(stoi(command[1]), vector<int>(stoi(command[1])));
@@ -184,9 +184,14 @@ int main(){
                     if(!duplicateChecker){
                         for(int i=0; i<graph.vertices.size(); i++){
                             if(graph.vertices[i]->data==" "){
+if(command[1]!=" "){
                                 graph.vertices[i]->data=command[1];
                                 graph.activeVertices++;
                                 break;
+}
+else{
+cout<<"please dont name the vertex nothing";
+}
                             }
                         }
                     }
@@ -230,7 +235,7 @@ int main(){
                         graph.activeEdges++;
                     }
                     else{
-                        cout<<"VECTOR/S NOT FOUND OR PERHAPS, EDGE ALREADY EXISTS!"<<endl;
+                        cout<<"VERTEX/ICES NOT FOUND OR PERHAPS, EDGE ALREADY EXISTS!"<<endl;
                     }
                 }
                 else{
@@ -270,7 +275,7 @@ int main(){
                         graph.activeEdges++; // yet those two directions are considered one edge
                     }
                     else{
-                        cout<<"VECTOR/S NOT FOUND OR PERHAPS, EDGE ALREADY EXISTS!"<<endl;
+                        cout<<"VERTEX/ICES NOT FOUND OR PERHAPS, EDGE ALREADY EXISTS!"<<endl;
                     }   
                 }
                 
@@ -317,7 +322,7 @@ int main(){
                     }
                 }
                 if(!Found){
-                    cout <<"VECTOR/S NOT FOUND" <<endl;
+                    cout <<"VERTEX NOT FOUND" <<endl;
                 }
                 
             }
@@ -376,7 +381,7 @@ int main(){
                     }
                 }
                 if(Found==false){
-                    cout << "VECTOR/S NOT FOUND" << endl; 
+                    cout << "VERTEX/S NOT FOUND" << endl; 
                 }
             }
             else if (inputDetect(command)==7){ //MPRINT
@@ -503,7 +508,7 @@ int main(){
                 
                 }
                 else{
-                    cout<<"VECTOR/S NOT FOUND"<<endl;
+                    cout<<"VERTEX/S NOT FOUND"<<endl;
                 }
             }
         }
