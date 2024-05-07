@@ -1,0 +1,12 @@
+DINIT 6
+VADD A
+VADD B
+VADD C
+VADD D
+VADD E
+VADD F
+
+APRINT
+trivial case where nothings connected to each other
+DSETS
+EXIT

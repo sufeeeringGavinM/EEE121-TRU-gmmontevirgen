@@ -1,0 +1,22 @@
+DINIT 9
+VADD A
+VADD B
+VADD C
+VADD D
+VADD E
+VADD F
+VADD G
+VADD L
+EADD G L 1
+EADD A B 1
+EADD B C 1
+EADD C D 1
+EADD D E 1
+
+SPATH A E
+
+APRINT
+DSETS
+
+case where everythings connected to each other once. except for F, poor F. also except for G and L, poor them.
+EXIT
