@@ -1,0 +1,35 @@
+UINIT 11
+VADD A
+VADD B
+VADD C
+VADD D
+VADD E
+VADD F
+VADD G
+VADD H
+VADD I
+VADD J
+VADD K
+
+EADD A B 8
+EADD A C 7
+EADD A B 1
+EADD B D 2
+EADD D E 3
+EADD E F 5
+EADD G H 9
+EADD I J 4
+EADD E G 1
+EADD H I 2
+EADD J K 4
+APRINT
+DSETS
+
+GENMST
+APRINT
+MST-MPRINT
+MST-APRINT
+
+previous example, but I made sure they all had connections, that's a really big graph
+
+EXIT

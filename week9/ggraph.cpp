@@ -3,10 +3,10 @@
 #include <string>
 #include <climits>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
-
-
+typedef pair<int,int> PII;
 
 vector<string> parser(string splitMe){ // taken from https://www.scaler.com/topics/split-string-in-cpp/ 
     vector<string> splitted;
@@ -45,11 +45,21 @@ struct Edge{
     int weight;
     int u;
     int v;
+    Edge(Node* to, Node* from, int weight):to(to),from(from),weight(weight)
+    {}
+};
+
+struct pptEdge{
+    int u;
+    int v;
+    int weight;
+
+    pptEdge(int u, int v, int weight): u(u), v(v), weight(weight){}
 };
 
 struct Graph{
     vector<Node*> vertices = {}; //I MEAN VERTICES BUT ITS TOO LATE TO CHANGE
-    vector<Edge*> edges = {};
+    vector<Edge> edges = {};
     int activeVertices=0;
     int activeEdges=0;
 };
@@ -201,6 +211,32 @@ int inputDetect(vector<string> command){
             return 0;
         }
     }
+
+    if(command[0]=="GENMST"){
+        if(command.size()==1){
+            return 12;
+        }
+        else{
+            return 0;
+        }
+    }
+    if(command[0]=="MST-MPRINT"){
+        if(command.size()==1){
+            return 13;
+        }
+        else{
+            return 0;
+        }
+    }
+    if(command[0]=="MST-APRINT"){
+        if(command.size()==1){
+            return 14;
+        }
+        else{
+            return 0;
+        }
+    }
+
     else{
         return 0;
     }  
@@ -210,9 +246,16 @@ int main(){
     Graph graph;
     vector<string> command=inputter(); 
     bool directed;
+    vector<vector<pptEdge>> G;
     vector<vector<int>> adjMatrix;
+    vector<vector<int>> mstMatrix;
+    Graph mstgraph;
     bool initialized=false;
     int numberofVertices;
+    bool mstexists=false;
+    int V;
+
+    vector<Edge> mstedging;
 
     while(command[0]!="EXIT"){
         if (inputDetect(command)==0){
@@ -298,15 +341,12 @@ int main(){
                         }
                     }
                     for(int i=0; i<graph.edges.size(); i++){
-                        if((graph.edges[i]->from->data==command[1] && graph.edges[i]->to->data==command[2])){
+                        if((graph.edges[i].from->data==command[1] && graph.edges[i].to->data==command[2])){
                             alreadyThere=true;
                         }
                     }
                     if(vertChecker==2 && !alreadyThere){
-                        Edge* newEdge= new Edge;
-                        newEdge->from=PH1;
-                        newEdge->to=PH2;
-                        newEdge->weight=stoi(command[3]);
+                        Edge newEdge= Edge(PH1, PH2, stoi(command[3]));
                         graph.edges.push_back(newEdge);
                         adjMatrix[PH1index][PH2index]=stoi(command[3]);
                         graph.activeEdges++;
@@ -327,26 +367,20 @@ int main(){
                             PH2index=i;
                             vertChecker++;
                         }
-                        
                     }
                     for(int i=0; i<graph.edges.size(); i++){
-                        if((graph.edges[i]->to->data==command[1] && graph.edges[i]->from->data==command[2]) || (graph.edges[i]->from->data==command[1] && graph.edges[i]->to->data==command[2])){
+                        if((graph.edges[i].to->data==command[1] && graph.edges[i].from->data==command[2]) || (graph.edges[i].from->data==command[1] && graph.edges[i].to->data==command[2])){
                             alreadyThere=true;
                         }
                     }
                     if(vertChecker==2 && !alreadyThere){
-                        Edge* newEdge= new Edge;
-                        newEdge->from=PH1;
-                        newEdge->to=PH2;
-                        newEdge->weight=stoi(command[3]);
+                        Edge newEdge= Edge(PH1,PH2,stoi(command[3]));
+                        
                         graph.edges.push_back(newEdge);
                         
                         //undirected = bidirectional
-                        newEdge= new Edge;
-                        newEdge->from=PH2;
-                        newEdge->to=PH1;
-                        newEdge->weight=stoi(command[3]);
-                        graph.edges.push_back(newEdge);
+                        Edge newEdge2= Edge(PH2,PH1,stoi(command[3]));
+                        graph.edges.push_back(newEdge2);
                         adjMatrix[PH1index][PH2index]=stoi(command[3]);
                         adjMatrix[PH2index][PH1index]=stoi(command[3]);
                         graph.activeEdges++; // yet those two directions are considered one edge
@@ -376,7 +410,7 @@ int main(){
                     } 
                 }
                 for(int i=0; i<graph.edges.size(); i++){
-                    if(graph.edges[i]->to->data == command[1] || graph.edges[i]->from->data == command[1]){
+                    if(graph.edges[i].to->data == command[1] || graph.edges[i].from->data == command[1]){
                         EdgesFound++;
                     }
                 }
@@ -389,12 +423,12 @@ int main(){
                     }
                 }
                 for(int i=0; i<graph.edges.size(); i++){ //delete edges associated with vertex to delete
-                    if(graph.edges[i]->from->data == command[1]){
+                    if(graph.edges[i].from->data == command[1]){
                         graph.edges.erase(graph.edges.begin()+i);
                     }
                 }
                 for(int i=0; i<graph.edges.size(); i++){ //delete edges associated with vertex to delete
-                    if(graph.edges[i]->to->data == command[1]){
+                    if(graph.edges[i].to->data == command[1]){
                         graph.edges.erase(graph.edges.begin()+i);
                     }
                 }
@@ -409,7 +443,7 @@ int main(){
                 int twoIndex;
                 if(directed){
                     for(int i=0; i<graph.edges.size(); i++){
-                        if(graph.edges[i]->from->data==command[1] && graph.edges[i]->to->data==command[2]){
+                        if(graph.edges[i].from->data==command[1] && graph.edges[i].to->data==command[2]){
                             graph.edges.erase(graph.edges.begin()+i);
                             graph.activeEdges--;
                             Found=true;
@@ -431,14 +465,14 @@ int main(){
                 }
                 else{
                     for(int i=0; i<graph.edges.size(); i++){
-                        if((graph.edges[i]->from->data==command[1] && graph.edges[i]->to->data==command[2])){
+                        if((graph.edges[i].from->data==command[1] && graph.edges[i].to->data==command[2])){
                             graph.edges.erase(graph.edges.begin()+i); 
                             Found=true;
                         }
                         
                     }
                     for(int i=0; i<graph.edges.size(); i++){
-                        if((graph.edges[i]->to->data==command[1] && graph.edges[i]->from->data==command[2])){
+                        if((graph.edges[i].to->data==command[1] && graph.edges[i].from->data==command[2])){
                             graph.edges.erase(graph.edges.begin()+i);
                             Found=true;
                         }
@@ -485,21 +519,20 @@ int main(){
                     cout << "[" << graph.vertices[i]->data<<"]"<<" -> ";
                     cout << "[" ;
                     for(int j=0; j<graph.edges.size(); j++){
-                        if(graph.edges[j]->from->data==graph.vertices[i]->data){
+                        if(graph.edges[j].from->data==graph.vertices[i]->data){
                             if(checker){
                                     cout<<", ";
-                                    cout<<"("<< graph.edges[j]->to->data<<", "<<graph.edges[j]->weight<<")";
+                                    cout<<"("<< graph.edges[j].to->data<<", "<<graph.edges[j].weight<<")";
                             }
                             else{
-                                cout<<"("<< graph.edges[j]->to->data<<", "<<graph.edges[j]->weight<<")";
+                                cout<<"("<< graph.edges[j].to->data<<", "<<graph.edges[j].weight<<")";
                                 checker=true;
                             }
                         }      
                     }
                     checker=false; 
                     cout << "]" << endl;
-                }
-                
+                }   
             }
             else if (inputDetect(command)==9){ //SPATH
                 int foundit=0;
@@ -514,7 +547,7 @@ int main(){
                     }
                 }
                 if(foundit==2){
-                    int V=graph.activeVertices;
+                    V=graph.activeVertices;
                     int E=graph.activeEdges;
                     vector<string> narrowWayThrough;
                     vector<int> dist(V);
@@ -529,8 +562,8 @@ int main(){
                     dist[src]=0;
                     for(int i=1;i<=V-1;i++){
                         for(int j=0; j<E; j++){
-                            uu = graph.edges[j]->from->data;
-                            vv= graph.edges[j]->to->data;
+                            uu = graph.edges[j].from->data;
+                            vv= graph.edges[j].to->data;
                             for(int i=0; i<graph.vertices.size(); i++){
                                 if(graph.vertices[i]->data==uu){
                                     u=i; //find nth vertex
@@ -539,21 +572,21 @@ int main(){
                                     v=i; 
                                 }   
                             }
-                            weight=graph.edges[j]->weight;
+                            weight=graph.edges[j].weight;
                             if(dist[u]!=INT_MAX && dist[u] + weight < dist[v]){
                                 dist[v]=dist[u]+weight;
                                 pre[v]=graph.vertices[u]->data; 
+                                cout << "v    d[v]   pre[v]]" << endl;
+                                for (int i = 0; i < V; i++){
+                                    if(dist[i]!=INT_MAX)
+                                        cout << graph.vertices[i]->data <<  "     " <<  dist[i] << "     "<<  pre[i] << endl;
+                                    else
+                                        cout << graph.vertices[i]->data <<  "     " <<  'X' << "     "<<  pre[i] << endl;
+                                }
                             }
                         }
                     }
                
-                    cout << "v    d[v]   pre[v]]" << endl;
-                    for (int i = 0; i < V; i++){
-                        if(dist[i]!=INT_MAX)
-                            cout << graph.vertices[i]->data <<  "     " <<  dist[i] << "     "<<  pre[i] << endl;
-                        else
-                            cout << graph.vertices[i]->data <<  "     " <<  'X' << "     "<<  pre[i] << endl;
-                    }
                     string nextVertex=command[2];
                     cout<<"Shortest path from " << command[1] << " to " << command[2] << " is: ";
                     int i=0;
@@ -603,11 +636,11 @@ int main(){
                 }
                 for(int i=0; i<graph.edges.size(); i++){
                     for(int j=0; j<dsets.size(); j++){
-                        if((graph.edges[i]->from->data == dsets[j][0]) && (find(dsets[j].begin(),dsets[j].end(), graph.edges[i]->to->data)==dsets[j].end())){
-                            dsets[j].push_back(graph.edges[i]->to->data);
+                        if((graph.edges[i].from->data == dsets[j][0]) && (find(dsets[j].begin(),dsets[j].end(), graph.edges[i].to->data)==dsets[j].end())){
+                            dsets[j].push_back(graph.edges[i].to->data);
                         }
-                        if((graph.edges[i]->to->data == dsets[j][0]) && (find(dsets[j].begin(),dsets[j].end(), graph.edges[i]->from->data)==dsets[j].end())){
-                            dsets[j].push_back(graph.edges[i]->from->data);
+                        if((graph.edges[i].to->data == dsets[j][0]) && (find(dsets[j].begin(),dsets[j].end(), graph.edges[i].from->data)==dsets[j].end())){
+                            dsets[j].push_back(graph.edges[i].from->data);
                         }
                     }
                 }        
@@ -627,7 +660,225 @@ int main(){
                 }
                 cout<<endl;
             }
+            else if(inputDetect(command) == 12) { // genmst
+                if(directed) {
+                    cout << "PRIM'S ALG DOESN'T WORK ON DIRECTED GRAPHS!";
+                }
+                else{
+                    int N=graph.vertices.size();
+                    mstexists=true;
+                    vector<int> d_s;
+                    vector<bool> inMST;
+                    vector<int> pre;
+                    vector<Edge> mstEdges;
+                    int currentweight;
+                    int u;
+                    int v;
+                    int w;
+                    int counter = 0;
+                    int MST_val = 0;
+
+                    G.clear();
+                    G.resize(N);
+                    d_s.clear();
+                    d_s.resize(N);
+                    pre.clear();
+                    pre.resize(N);
+
+                    priority_queue<PII,vector<PII>,greater<PII> > pq;
+                    priority_queue<PII,vector<PII>,greater<PII> > pq2;
+
+                    for(int i=0; i<graph.edges.size(); i++){
+                        for(int j=0; j<graph.vertices.size(); j++){
+                            if(graph.edges[i].from->data==graph.vertices[j]->data){
+                                u=j;
+                            }
+                            if(graph.edges[i].to->data==graph.vertices[j]->data){
+                                v=j;
+                            }
+                        }
+                        w=graph.edges[i].weight;
+                        G[u].push_back(pptEdge(u,v,w));
+                        G[v].push_back(pptEdge(v,u,w));
+                    }
+                    for(int i=0; i<N; i++){
+                        d_s[i]=INT_MAX;
+                        pre[i]=-1;
+                    }
+
+                    d_s[0]=0;
+                    pq.push(make_pair(d_s[0],0));
+                    
+                    while(!pq.empty() && counter != N) {
+                        u = pq.top().second;
+                        w = pq.top().first;
+                        pq.pop();
+
+                        d_s[u] = 0;
+                        MST_val += w;
+                        counter++;
+
+                        for(int i = 0; i < G[u].size(); i++) {
+                            pptEdge e = G[u][i];
+                            if(d_s[e.v] > e.weight) {
+                                d_s[e.v] = e.weight;
+                                pre[e.v] = e.u;
+                                pq.push(make_pair(d_s[e.v],e.v));
+                                pq2=pq;
+                                cout<<"[";
+                                while(!pq2.empty()){
+                                    cout<< "(" << graph.vertices[pq2.top().second]->data << ", ";
+                                    cout<< pq2.top().first << "), ";
+                                    pq2.pop();
+                                }
+                                cout<<'\b'<<'\b';
+                                cout<< "]";
+                                cout<<endl;
+                                cout << "v    d[v]   pre[v]]" << endl;
+                                for (int z = 0; z < N; z++){
+                                    if(d_s[z]!=INT_MAX)
+                                        {if(pre[z]==-1)
+                                            cout << graph.vertices[z]->data <<  "     " <<  d_s[z] << "     "<< "-" << endl;
+                                        else
+                                             cout << graph.vertices[z]->data <<  "     " <<  d_s[z] << "     "<< graph.vertices[pre[z]]->data << endl;}
+                                    else{
+                                        if(pre[z]==-1)
+                                            cout << graph.vertices[z]->data <<  "     " <<  "X" << "     "<< "-" << endl;
+                                        else
+                                             cout << graph.vertices[z]->data <<  "     " <<  "X" << "     "<< graph.vertices[pre[z]]->data << endl;}
+
+                                }
+                                cout<<endl;
+                            }
+                        } 
+                    }
+                    bool diditwork=true;
+                    for(int u=0; u<d_s.size(); u++){
+                        if(d_s[u]==INT_MAX){
+                            diditwork=false;
+                            mstexists=false;
+                            cout<<"YOUR STUFF IS NOT CONNECTED!!"<<endl;
+                        }
+                    }
+                    if(diditwork){//alas
+                        pq2=pq;
+                        cout<<"[";
+                        while(!pq2.empty()){
+                            cout<< "(" << graph.vertices[pq2.top().second]->data << ", ";
+                            cout<< pq2.top().first << "), ";
+                            pq2.pop();
+                        }
+                        cout<<'\b'<<'\b';
+                        cout<< "]"<<endl;
+
+                        cout << "v    d[v]   pre[v]]" << endl;
+                    
+                        for (int z = 0; z < N; z++){
+                            if(d_s[z]!=INT_MAX){
+                                if(pre[z]==-1)
+                                    cout << graph.vertices[z]->data <<  "     " <<  d_s[z] << "     "<< "-" << endl;
+                                else{
+                                    cout << graph.vertices[z]->data <<  "     " <<  d_s[z] << "     "<< graph.vertices[pre[z]]->data << endl;
+                                    for(int k=0; k<graph.activeEdges; k++){
+                                        
+                                        if((graph.edges[k].from->data == graph.vertices[z]->data) &&  (graph.edges[k].to->data == graph.vertices[pre[z]]->data)){
+                                            currentweight=graph.edges[k].weight;
+                                        
+                                        }
+                                    }
+                                    mstgraph.edges.push_back(Edge(graph.vertices[z],graph.vertices[pre[z]],currentweight));
+                                    mstgraph.edges.push_back(Edge(graph.vertices[pre[z]],graph.vertices[z],currentweight));
+                                }
+                            }
+                            else{
+                                if(pre[z]==-1)
+                                    cout << graph.vertices[z]->data <<  "     " <<  "X" << "     "<< "-" << endl;
+                                else{
+                                    cout << graph.vertices[z]->data <<  "     " <<  "X" << "     "<< graph.vertices[pre[z]]->data << endl;
+                                    
+                                }
+                            }
+                        }
+
+                        cout<<"Weight is " << MST_val << endl; 
+                        
+                        for(int i=0; i<mstgraph.edges.size(); i++){
+                            if(find(mstgraph.vertices.begin(),mstgraph.vertices.end(), mstgraph.edges[i].to)==mstgraph.vertices.end()){
+                                mstgraph.vertices.push_back(mstgraph.edges[i].to);
+                            }
+                            if(find(mstgraph.vertices.begin(),mstgraph.vertices.end(), mstgraph.edges[i].from)==mstgraph.vertices.end()){
+                                mstgraph.vertices.push_back(mstgraph.edges[i].from);
+                            }
+                        }
+                        int a,b;
+                        mstMatrix.resize(mstgraph.vertices.size(), vector<int>(mstgraph.vertices.size()));
+                        for(int i=0; i<mstgraph.edges.size(); i++){
+                            for(int j=0; j<mstgraph.vertices.size();j++){
+                                if(mstgraph.edges[i].from->data==mstgraph.vertices[j]->data){
+                                    a=j;
+                                }
+                                if(mstgraph.edges[i].to->data==mstgraph.vertices[j]->data){
+                                    b=j;
+                                }
+                            }
+                            mstMatrix[a][b]=mstgraph.edges[i].weight;
+                            mstMatrix[b][a]=mstgraph.edges[i].weight;
+                        }
+                        cout << endl;
+                    }
+                }
+            }
+            else if(inputDetect(command)==13){
+                if(mstexists==false){
+                    cout <<"RUN GENMST FIRST! OR MAKE SURE YOU CAN ACTUALLY MAKE A SPANNING TREE WITH THAT!"<<endl<<endl;
+                }
+                else{
+                    cout << "|V| = " << mstgraph.vertices.size() << ",  " << "|E| = " << mstgraph.edges.size()/2 << endl;
+                    cout << "      ";
+                    for(int i=0; i<mstgraph.vertices.size(); i++){
+                        cout << "[" << mstgraph.vertices[i]->data << "]" << "      ";
+                    }
+                    cout<<endl;
+                    for(int i=0; i<mstgraph.vertices.size();i++){
+                        cout << "[" << mstgraph.vertices[i]->data << "]";
+                        
+                        for(int j=0; j<mstgraph.vertices.size();j++){
+                            cout<< "    " << mstMatrix[i][j]<<"    ";
+                        }
+                        cout<<endl;
+                    }
+                    cout<<endl;
+                }
+            }
+            else if(inputDetect(command)==14){
+                if(!mstexists){
+                    cout <<"RUN GENMST FIRST! OR MAKE SURE YOU CAN ACTUALLY MAKE A SPANNING TREE WITH THAT!"<<endl<<endl;
+                }
+                else{
+                    bool checker=false;
+                    cout << "|V| = " << mstgraph.vertices.size() << ",  " << "|E| = " << mstgraph.edges.size()/2 << endl;
+                    for(int i=0; i<mstgraph.vertices.size(); i++){
+                        cout << "[" << mstgraph.vertices[i]->data<<"]"<<" -> ";
+                        cout << "[" ;
+                        for(int j=0; j<mstgraph.edges.size(); j++){
+                            if(mstgraph.edges[j].from->data==mstgraph.vertices[i]->data){
+                                if(checker){
+                                        cout<<", ";
+                                        cout<<"("<< mstgraph.edges[j].to->data<<", "<<mstgraph.edges[j].weight<<")";
+                                }
+                                else{
+                                    cout<<"("<< mstgraph.edges[j].to->data<<", "<<mstgraph.edges[j].weight<<")";
+                                    checker=true;
+                                }
+                            }      
+                        }
+                        checker=false; 
+                        cout << "]" << endl;
+                    }
+                    cout<<endl;
+                }
+            }
         }
         command=inputter();
     }
-} 
+}
