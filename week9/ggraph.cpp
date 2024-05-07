@@ -98,15 +98,15 @@ vector<vector<string>> mergeStuff(vector<vector<string>>& vectors) { //didnt wan
 
     // merge similar vetors
     vector<vector<string>> mergedVectors(n);
-    for (int i = 0; i < n; i++) {
+    for (int i=0; i<n; i++) {
         int root = FINDHER.find(i);
         mergedVectors[root].insert(mergedVectors[root].end(), vectors[i].begin(), vectors[i].end());
     }
 
     // remove dupes
-    for (vector<string>& vec:mergedVectors) {
-        sort(vec.begin(), vec.end());
-        vec.erase(unique(vec.begin(), vec.end()), vec.end());
+    for (int i=0;i<mergedVectors.size();i++) {
+        sort(mergedVectors[i].begin(),mergedVectors[i].end());
+        mergedVectors[i].erase(unique(mergedVectors[i].begin(), mergedVectors[i].end()), mergedVectors[i].end());
     }
 
     // remove emptyes
