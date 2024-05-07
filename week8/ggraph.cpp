@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <climits>
+#include <algorithm>
 
 using namespace std;
 
@@ -124,9 +125,17 @@ int inputDetect(vector<string> command){
             return 0;
         }
     }
+    if(command[0]=="DSETS"){
+        if(command.size()==1){
+            return 11;
+        }
+        else{
+            return 0;
+        }
+    }
     else{
         return 0;
-    }
+    }  
 }
 
 int main(){
@@ -184,14 +193,14 @@ int main(){
                     if(!duplicateChecker){
                         for(int i=0; i<graph.vertices.size(); i++){
                             if(graph.vertices[i]->data==" "){
-if(command[1]!=" "){
-                                graph.vertices[i]->data=command[1];
-                                graph.activeVertices++;
-                                break;
-}
-else{
-cout<<"please dont name the vertex nothing";
-}
+                                if(command[1]!=" "){
+                                    graph.vertices[i]->data=command[1];
+                                    graph.activeVertices++;
+                                    break;
+                                }
+                                else{
+                                    cout<<"please dont name the vertex nothing";
+                                }
                             }
                         }
                     }
@@ -466,6 +475,13 @@ cout<<"please dont name the vertex nothing";
                             if(dist[u]!=INT_MAX && dist[u] + weight < dist[v]){
                                 dist[v]=dist[u]+weight;
                                 pre[v]=graph.vertices[u]->data; 
+                                cout << "v    d[v]   pre[v]]" << endl;
+                                for (int i = 0; i < V; i++){
+                                    if(dist[i]!=INT_MAX)
+                                        cout << graph.vertices[i]->data <<  "     " <<  dist[i] << "     "<<  pre[i] << endl;
+                                    else
+                                        cout << graph.vertices[i]->data <<  "     " <<  'X' << "     "<<  pre[i] << endl;
+                                }
                             }
                         }
                     }
@@ -510,6 +526,51 @@ cout<<"please dont name the vertex nothing";
                 else{
                     cout<<"VERTEX/S NOT FOUND"<<endl;
                 }
+            }
+            else if (inputDetect(command)==11){ //DSETS
+                Node* currentNode;
+                vector<string> cousins; //feydrauthaharkonnene
+                vector<string> noincest;
+                vector<vector<string>> dsets;
+
+                for(int j=0; j<graph.activeVertices; j++){
+                    Node* currentNode = graph.vertices[j];
+                    cousins.push_back(currentNode->data);
+                    dsets.resize(j+1);
+                    dsets[j].push_back(currentNode->data);
+                    for(int i=0; i<graph.activeEdges;i++){ // find currentNode's related vertices
+                        if(graph.edges[i]->from->data==currentNode->data){
+                            cousins.push_back(graph.edges[i]->to->data);
+                        }
+                        if(graph.edges[i]->to->data==currentNode->data){
+                            cousins.push_back(graph.edges[i]->from->data);
+                        }
+                    }
+                    for(int i=0; i<graph.activeVertices; i++){
+                        if(find(noincest.begin(), noincest.end(), graph.vertices[i]->data) == noincest.end() && find(cousins.begin(), cousins.end(), graph.vertices[i]->data) == cousins.end()){
+                            noincest.push_back(graph.vertices[i]->data);
+                        }
+                    }
+                    
+                    for(int i=0; i<noincest.size(); i++){
+                        dsets[j].push_back(noincest[i]);
+                    }
+                    noincest.clear();
+                    cousins.clear();
+                }
+                for(int z=0; z<dsets.size(); z++){
+                    cout << "{";
+                    for(int x=0; x<dsets[z].size(); x++){
+                        if(x!=dsets[z].size()-1){
+                            cout << dsets[z][x] << ", ";
+                            }
+                        else{
+                            cout << dsets[z][x];
+                        }
+                    }
+                    cout <<"} ";
+                }
+                cout<<endl;
             }
         }
         command=inputter();
