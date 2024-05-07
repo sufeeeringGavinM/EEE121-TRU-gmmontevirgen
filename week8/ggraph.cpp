@@ -480,7 +480,7 @@ int main(){
                                     if(dist[i]!=INT_MAX)
                                         cout << graph.vertices[i]->data <<  "     " <<  dist[i] << "     "<<  pre[i] << endl;
                                     else
-                                        cout << graph.vertices[i]->data <<  "     " <<  'X' << "     "<<  pre[i] << endl;
+                                        cout << graph.vertices[i]->data <<  "     " <<  'x' << "     "<<  pre[i] << endl;
                                 }
                             }
                         }
