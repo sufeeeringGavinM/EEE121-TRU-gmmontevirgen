@@ -23,5 +23,5 @@ APRINT
 MST-MPRINT
 MST-APRINT
 
-this example was from the ppt
+this example was from the lecture codes (MST.in converted to input compatible with this code)
 EXIT

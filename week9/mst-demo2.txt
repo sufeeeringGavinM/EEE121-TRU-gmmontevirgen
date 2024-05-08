@@ -13,7 +13,6 @@ VADD K
 
 EADD A B 8
 EADD A C 7
-EADD A B 1
 EADD B D 2
 EADD D E 3
 EADD E F 5
@@ -30,6 +29,6 @@ APRINT
 MST-MPRINT
 MST-APRINT
 
-previous example, but I made sure they all had connections, that's a really big graph
+previous example, but I made sure they all had connections, we get a really big graph
 
 EXIT

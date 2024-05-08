@@ -662,7 +662,7 @@ int main(){
             }
             else if(inputDetect(command) == 12) { // genmst
                 if(directed) {
-                    cout << "PRIM'S ALG DOESN'T WORK ON DIRECTED GRAPHS!";
+                    cout << "PRIM'S ALG DOESN'T WORK ON DIRECTED GRAPHS! RESTART THE ENTIRE PROGRAM" <<endl <<endl;
                 }
                 else{
                     int N=graph.vertices.size();
