@@ -1,4 +1,4 @@
-UINIT 7
+UINIT 11
 VADD A
 VADD B
 VADD C
@@ -6,22 +6,28 @@ VADD D
 VADD E
 VADD F
 VADD G
-EADD A B 2
+VADD H
+VADD I
+VADD J
+VADD K
+
+EADD A B 1
 EADD A C 1
-EADD B C 5
-EADD B E 3
-EADD B D 11
-EADD C E 1
-EADD E F 4
-EADD C F 15
-EADD E G 3
-EADD F G 1
-EADD D G 1
-EADD D E 3
+EADD A B 1
+EADD B D 1
+
+EADD E F 1
+EADD E G 1
+EADD H I 1
+EADD J K 1
+APRINT
+DSETS
+
 GENMST
 APRINT
 MST-MPRINT
 MST-APRINT
 
-this example was from the lecture codes (MST.in converted to input compatible with this code)
+the example from the PPT too, four separated connected components, which Does not satisfy conditions for a minimum spanning tree to exist
+
 EXIT
