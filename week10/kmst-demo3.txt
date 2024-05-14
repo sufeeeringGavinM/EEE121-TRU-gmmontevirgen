@@ -1,0 +1,31 @@
+UINIT 11
+VADD A
+VADD B
+VADD C
+VADD D
+VADD E
+VADD F
+VADD G
+VADD H
+VADD I
+VADD J
+VADD K
+
+EADD A B 1
+EADD A C 1
+EADD A B 1
+EADD B D 1
+
+EADD E F 1
+EADD E G 1
+EADD H I 1
+EADD J K 1
+APRINT
+
+KMST
+KMST-MPRINT
+KMST-APRINT
+
+the example from the PPT too, four separated connected components, which Does not satisfy conditions for a minimum spanning tree to exist
+
+EXIT
