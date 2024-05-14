@@ -1078,6 +1078,7 @@ int main(){
                     // most are just copypastes from genmst
                     for(int i=0; i<KMST.size(); i++){
                         kmstgraph.edges.push_back(Edge(graph.vertices[KMST[i].u], graph.vertices[KMST[i].v],KMST[i].weight));
+                        kmstgraph.edges.push_back(Edge(graph.vertices[KMST[i].v], graph.vertices[KMST[i].u],KMST[i].weight)); //UNDIRECTED GRAPH !
                     }
                     for(int i=0; i<kmstgraph.edges.size(); i++){
                         if(find(kmstgraph.vertices.begin(),kmstgraph.vertices.end(), kmstgraph.edges[i].to)==kmstgraph.vertices.end()){
