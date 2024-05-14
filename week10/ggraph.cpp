@@ -1011,23 +1011,31 @@ int main(){
                     }
                     q2=q3;
                     j=0; //truthtracker
+                    int k=0;   
+                    cout<<"PQ: " << " edge     key    MST-flag" <<endl;
+                    while(!q2.empty()){ 
+                        cout<<"     ("<<graph.vertices[q2.top().v]->data << ", " << graph.vertices[q2.top().u]->data << ")   " << q2.top().weight << "     " << boolalpha << truth[k] << endl;
+                        q2.pop();
+                        k+=1;
+                    }
+                    cout<<"DS: " <<"[";
+                    PrintSets(N,graph);
+                    cout<<"]"<<endl;
+                    q2=q3;
+                    cout<<endl;
                     while(!q.empty() && counter < N-1){                                           
                         pptEdge e=q.top();
                         pptEdge e2=q3.top();
                         truth[j]=true;
                         j+=1;
+                        
                         if(FindSet(e.u)!=FindSet(e.v)){
-                            
-                            cout<<"DS: " <<"[";
-                            PrintSets(N,graph);
-                            cout<<"]";
-                            cout<<endl<<endl;
 
-                            cout<<"PQ:"<<endl;
-                            cout << "edge     key    MST-flag" <<endl; 
-                            int k=0;   
+                            cout<<"PQ: ";
+                            cout << " edge     key    MST-flag" <<endl; 
+                            k=0;   
                             while(!q2.empty()){ 
-                                cout<<"("<<graph.vertices[q2.top().v]->data << ", " << graph.vertices[q2.top().u]->data << ")   " << q2.top().weight << "     " << boolalpha << truth[k] << endl;
+                                cout<<"     ("<<graph.vertices[q2.top().v]->data << ", " << graph.vertices[q2.top().u]->data << ")   " << q2.top().weight << "     " << boolalpha << truth[k] << endl;
                                 q2.pop();
                                 k+=1;
                             }
@@ -1037,6 +1045,10 @@ int main(){
 
                             counter++;
                             Union(e.u,e.v);
+                            cout<<"DS: " <<"[";
+                            PrintSets(N,graph);
+                            cout<<"]"<<endl;
+                            cout<<endl;
                             
                         }
                         
@@ -1045,10 +1057,6 @@ int main(){
 
                     }
                     
-                    cout<<"DS: " <<"[";
-                    PrintSets(N,graph);
-                    cout<<"]";
-                    cout<<endl;
 
 
                     if(counter == N-1){
