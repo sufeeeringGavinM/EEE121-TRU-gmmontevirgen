@@ -1053,9 +1053,9 @@ int main(){
 
                     if(counter == N-1){
                         cout << "KMST total weight: " << KMSTval << endl;
-                        cout << "Edges in KMST: " <<endl;
+                        cout << "Edges in KMST: ";
                         for(int i = 0; i < KMST.size(); i++) {
-                            cout << "(" << graph.vertices[KMST[i].v]->data << ", " << graph.vertices[KMST[i].u]->data << ") ";
+                            cout << "(" << graph.vertices[KMST[i].v]->data << ", " << graph.vertices[KMST[i].u]->data << ", " <<KMST[i].weight<< ") ";
                         }
                         cout<<endl;
                         kmstexists=true;
