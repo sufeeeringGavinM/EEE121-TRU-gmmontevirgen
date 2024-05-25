@@ -4,6 +4,7 @@
 #include <algorithm> 
 #include <queue>
 #include <climits>
+#include <fstream>
 
 using namespace std;
 
@@ -80,8 +81,10 @@ vector<vector<Edge>> adjCreator(int n, vector<Edge> edges){
 vector<vector<int>> closestAirports(int n, int k, vector<Edge> Adj){ 
     // this is really just djkistra but lets initialize distance of those with airports as 0
     vector<vector<Edge>> adj = adjCreator(n,Adj); //create adjlist
+    
     vector<int> d_s(n, INT_MAX); //preinitialize to intmax
     vector<int> pre(n, -1);
+    
     int u,w;
     priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq; 
 
@@ -130,8 +133,8 @@ int main(){
     vector<Edge> country; 
     vector<Edge> air2air; // cities with airport-to-airport will be moved here
     vector<Edge> ProfitableFlights;
-    
     vector<vector<int>> closestAirportss;
+
     for(int a=0; a<testcases; a++){
         cin >> ncities >> nwa >> nedges;
         
@@ -141,19 +144,48 @@ int main(){
         air2air.clear();
         ProfitableFlights.clear();
         closestAirportss.clear();
+        string line;
+        vector<string> lines;
+        string findme="";
         
+        // generate city nodes in graph also filename is based on N K and M
+        string filename = "graph-diagram-";
+        filename+=to_string(a+1);
+        filename+="-";
+        filename+=to_string(ncities);
+        filename+="-";
+        filename+=to_string(nwa);
+        filename+="-";
+        filename+=to_string(nedges);
+        filename+=".dot";
+        ofstream dotfile(filename);
+        
+        dotfile << "strict graph G{";
+        dotfile << "    fontname=\"Helvetica,Arial,sans-serif\"" <<endl;
+        dotfile << "    node [fontname=\"Helvetica,Arial,sans-serif\",colorscheme=greens9]" <<endl;
+        dotfile << "    edge [fontname=\"Helvetica,Arial,sans-serif\"]" << endl;
+        for(int i=0; i<nwa; i++){
+            dotfile << i <<" [label=\"City-" << i << "\", style=filled, color=8,fontcolor=white]" << endl;
+        }
+        for(int i=nwa; i<ncities; i++){
+            dotfile << i <<" [label=\"City-" << i << "\", style=filled, color=5,fontcolor=white]" << endl;
+        }
+
         // initialize edges
         for(int j=0; j<nedges; j++){
             cin >> u >> v >> w;
             if(u<=nwa-1 && v<=nwa-1){
                 country.insert(country.begin(),Edge(u,v,w)); //those at start will be those from airport to airport
                 air2air.push_back(Edge(u,v,w));
+                dotfile << u << " -- " << v << " [label=" << w << ", style=dashed, color=gray]" << endl;
             }
             else{
                 country.push_back(Edge(u,v,w)); 
+                dotfile << u << " -- " << v << " [label=" << w << ", style=line, color=gray]" << endl;
             }
         }
 
+       
         // A. max profit (there are K-1 flights as there are K number of airports)
         // essentialy find maximum spanning tree, we can do this by just inversing the weights and doing minimum spanning tree alg
 
@@ -165,10 +197,12 @@ int main(){
         }
         cout<< "Airline Profit: " <<maxProfit<<endl;
 
-        std::cout << "Flights:\n";
+        cout << "Flights:\n";
         for (int j=0; j<ProfitableFlights.size(); j++) {
-            std::cout << ProfitableFlights[j].u << " " << ProfitableFlights[j].v << " " << ProfitableFlights[j].weight << endl;
+            cout << ProfitableFlights[j].u << " " << ProfitableFlights[j].v << " " << ProfitableFlights[j].weight << endl;
             maxProfit+=ProfitableFlights[j].weight;
+
+            dotfile << ProfitableFlights[j].u << " -- " << ProfitableFlights[j].v << " [label=" << ProfitableFlights[j].weight << ", style=dashed, color=blue]" << endl;
         }
         
         // B. distance of each city to nearest airport
@@ -179,16 +213,20 @@ int main(){
         cout << "Shortest distance from each city to the nearest airport city:\n";
         for (int i = nwa; i < ncities; i++) {
             //cout << i << ": " << closestAirportss[0][i] << "\n";
-            cout << i << ": " << closestAirportss[1][i] << "\n";
+            cout << i << ": " << closestAirportss[0][i] << "\n";
             vector<int> path=pathFinder(i,closestAirportss[1]);
-            cout<< "Path taken: ";
-            for(int i=0;i<path.size();i++){
-                cout<<path[i]<<" ";
+            
+            for(int j=0; j<path.size()-1;j++){ // find what edges and what weights to change for the graph.
+                for(int z=0; z<country.size(); z++){
+                    if((country[z].u == path[j] && country[z].v == path[j+1])||((country[z].v == path[j] && country[z].u == path[j+1]))){
+                        dotfile << path[j] << " -- " << path[j+1] << " [label=" << country[z].weight << ", style=line, color=blue]" << endl;
+                    }
+                }
             }
-            cout<<endl<<endl;
         }
 
-        // C. generate graph
+        dotfile << "}";
 
+        dotfile.close();
     }
 }
