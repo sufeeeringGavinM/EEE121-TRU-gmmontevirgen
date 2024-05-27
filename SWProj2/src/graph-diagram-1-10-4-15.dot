@@ -1,6 +1,6 @@
-strict graph G{    fontname="Helvetica,Arial,sans-serif"
-    node [fontname="Helvetica,Arial,sans-serif",colorscheme=greens9]
-    edge [fontname="Helvetica,Arial,sans-serif"]
+strict graph G{    fontname="Papyrus"
+    node [fontname="Papyrus",colorscheme=greens9]
+    edge [fontname="Comic Sans MS"]
 0 [label="City-0", style=filled, color=8,fontcolor=white]
 1 [label="City-1", style=filled, color=8,fontcolor=white]
 2 [label="City-2", style=filled, color=8,fontcolor=white]
