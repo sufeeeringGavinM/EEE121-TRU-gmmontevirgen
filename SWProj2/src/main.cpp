@@ -142,6 +142,12 @@ int main(){
         air2air.clear();
         ProfitableFlights.clear();
         closestAirportss.clear();
+
+        if(ncities>=1000 || nedges >=100000 || nwa>=ncities || 2>=nwa || 2>=ncities){
+            cout << "N, K, M do not meet limitations/requirements!" <<endl;
+            cout << "N < 1000, M < 100000, 2 < K < N" <<endl;
+            exit(69);
+        }
         
         // generate city nodes in graph also filename is based on N K and M
         string filename = "graph-diagram-";
@@ -173,6 +179,17 @@ int main(){
         // initialize edges
         for(int j=0; j<nedges; j++){
             cin >> u >> v >> w;
+            if(u>=ncities || v>=ncities){
+                cout<< "This edge right here: " << u <<" " << v << " " << endl; 
+                cout<<"You inputted something beyond the number of cities!"<<endl;
+                exit(69);
+            }
+            if(u==v || v==u){
+                cout<<"This edge right here: "<< u <<" " << v << " " << endl; 
+                cout<<"Why would you go from a city to itself???"<<endl;
+                exit(69);
+            }
+
             if(u<=nwa-1 && v<=nwa-1){
                 country.insert(country.begin(),Edge(u,v,w)); //those at start will be those from airport to airport
                 air2air.push_back(Edge(u,v,w));
@@ -211,7 +228,13 @@ int main(){
         cout << "Shortest distance from each city to the nearest airport city:\n";
         for (int i = nwa; i < ncities; i++) {
             //cout << i << ": " << closestAirportss[0][i] << "\n";
-            cout << i << ": " << closestAirportss[0][i] << "\n";
+            if(closestAirportss[0][i]==INT_MAX){
+                cout << i << ": " << "No shortest distance found" << "\n";
+            }
+            else{
+                cout << i << ": " << closestAirportss[0][i] << "\n";
+            }
+                
             path=pathFinder(i,closestAirportss[1]);
             
             for(int j=0; j<path.size()-1;j++){ // find what edges and what weights to add for the graph based on the path
