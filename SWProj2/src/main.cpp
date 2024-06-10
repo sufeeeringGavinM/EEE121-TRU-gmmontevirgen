@@ -166,9 +166,9 @@ int main(){
         
         dotfile << "strict graph G{"; //strict so i dont have to find/replace every edge that turns out to be shortest distance to airport or max profit that i originally initialized as a simple gray dotted/solid line
                                       // i tried the "find/replace every line containing this edge" and it was too much of a headache!
-        dotfile << "    fontname=\"Papyrus\"" <<endl;
-        dotfile << "    node [fontname=\"Papyrus\",colorscheme=greens9]" <<endl;
-        dotfile << "    edge [fontname=\"Comic Sans MS\"]" << endl;
+        dotfile << "    fontname=\"Helvetica,Arial,sans-serif\"" <<endl;
+        dotfile << "    node [fontname=\"Helvetica,Arial,sans-serif\",colorscheme=greens9]" <<endl;
+        dotfile << "    edge [fontname=\"Helvetica,Arial,sans-serif\"]" << endl;
         for(int i=0; i<nwa; i++){
             dotfile << i <<" [label=\"City-" << i << "\", style=filled, color=8,fontcolor=white]" << endl;
         }
