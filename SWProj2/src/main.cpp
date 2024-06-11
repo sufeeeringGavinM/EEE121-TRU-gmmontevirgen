@@ -16,6 +16,8 @@ struct Edge{
     Edge(int u, int v, int weight): u(u), v(v), weight(weight){}
 };
 
+//max spanning end
+
 class UnionFind{
     public:
         vector<int> parent, rank;
@@ -72,6 +74,10 @@ vector<Edge> maxTree(int nwa, vector<Edge> air2air){
     return Mst;
 }
 
+//max spanning tree end
+
+//closest airports part start 
+
 vector<vector<int>> closestAirports(int ncities, int nwa, vector<Edge> country){ //n is n of cities, k is n of 
     // this is really just djkistra but lets initialize distance of those with airports as 0
     vector<vector<Edge>> adj(ncities);
@@ -121,6 +127,8 @@ vector<int> pathFinder(int start, vector<int> pre){ //thisll make life easier fo
     return path;
 }
 
+//closest airports part end
+
 int main(){
     int testcases;
     int ncities, nwa, nedges; // n cities, n cities with airport, n edges
@@ -143,11 +151,11 @@ int main(){
         ProfitableFlights.clear();
         closestAirportss.clear();
 
-        if(ncities>=1000 || nedges >=100000 || nwa>=ncities || 2>=nwa || 2>=ncities){
-            cout << "N, K, M do not meet limitations/requirements!" <<endl;
-            cout << "N < 1000, M < 100000, 2 < K < N" <<endl;
-            exit(69);
-        }
+        // if(ncities>=1000 || nedges >=100000 || nwa>=ncities || 2>=nwa || 2>=ncities){
+        //     cout << "N, K, M do not meet limitations/requirements!" <<endl;
+        //     cout << "N < 1000, M < 100000, 2 < K < N" <<endl;
+        //     exit(69);
+        // }
         
         // generate city nodes in graph also filename is based on N K and M
         string filename = "graph-diagram-";
@@ -179,16 +187,16 @@ int main(){
         // initialize edges
         for(int j=0; j<nedges; j++){
             cin >> u >> v >> w;
-            if(u>=ncities || v>=ncities){
-                cout<< "This edge right here: " << u <<" " << v << " " << endl; 
-                cout<<"You inputted something beyond the number of cities!"<<endl;
-                exit(69);
-            }
-            if(u==v || v==u){
-                cout<<"This edge right here: "<< u <<" " << v << " " << endl; 
-                cout<<"Why would you go from a city to itself???"<<endl;
-                exit(69);
-            }
+            // if(u>=ncities || v>=ncities){
+            //     cout<< "This edge right here: " << u <<" " << v << " " << endl; 
+            //     cout<<"You inputted something beyond the number of cities!"<<endl;
+            //     exit(69);
+            // }
+            // if(u==v || v==u){
+            //     cout<<"This edge right here: "<< u <<" " << v << " " << endl; 
+            //     cout<<"Why would you go from a city to itself???"<<endl;
+            //     exit(69);
+            // }
 
             if(u<=nwa-1 && v<=nwa-1){
                 country.insert(country.begin(),Edge(u,v,w)); //those at start will be those from airport to airport
@@ -226,7 +234,11 @@ int main(){
         closestAirportss=closestAirports(ncities,nwa,country);
         
         cout << "Shortest distance from each city to the nearest airport city:\n";
+        if(ncities=nwa){
+                cout << "All cities are airport cities, cool!"<<endl;
+            }
         for (int i = nwa; i < ncities; i++) {
+            
             //cout << i << ": " << closestAirportss[0][i] << "\n";
             if(closestAirportss[0][i]==INT_MAX){
                 cout << i << ": " << "No shortest distance found" << "\n";
