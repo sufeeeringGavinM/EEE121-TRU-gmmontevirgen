@@ -66,10 +66,17 @@ vector<Edge> maxTree(int nwa, vector<Edge> air2air){
     sort(air2air.begin(),air2air.end(),edgeComparer);
     UnionFind unionf(nwa);
     vector<Edge> Mst;
+    int counter=0;
     for(int i=0; i<air2air.size(); i++){
         if(unionf.unyon(air2air[i].u, air2air[i].v)){
             Mst.push_back(air2air[i]);
+            counter++;
         }
+    }
+    if(counter==air2air.size()-1){
+        cout<<"NO max span tree"<<endl;
+        Mst.clear();
+        return Mst;
     }
     return Mst;
 }
@@ -234,9 +241,9 @@ int main(){
         closestAirportss=closestAirports(ncities,nwa,country);
         
         cout << "Shortest distance from each city to the nearest airport city:\n";
-        if(ncities=nwa){
-                cout << "All cities are airport cities, cool!"<<endl;
-            }
+        if(ncities==nwa){
+            cout << "All cities are airport cities, cool!"<<endl;
+        }
         for (int i = nwa; i < ncities; i++) {
             
             //cout << i << ": " << closestAirportss[0][i] << "\n";
